@@ -57,4 +57,3 @@ ALTER TABLE `operation` ADD CONSTRAINT `fk_prochain_poste` FOREIGN KEY (`id_proc
 CREATE USER 'bijouterie_chimere'@'%' IDENTIFIED BY 'bijouterie_chimere';
 GRANT USAGE ON *.* TO 'bijouterie_chimere'@'%' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
 GRANT ALL PRIVILEGES ON `bijouterie_chimere`.* TO 'bijouterie_chimere'@'%' WITH GRANT OPTION;
-
