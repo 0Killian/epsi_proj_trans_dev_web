@@ -2,7 +2,8 @@
 
 # le projet porte sur la création d'une application web pour une bijouterie.
 # l'application ne devra pas être responsive ni adaptée au format mobile.
-# l'application devra répondre aux attentes présente dans le document ("expression des besoins") 
+# l'application devra répondre aux attentes présente dans le document ("expression des besoins").
+# le client ne devra pas avoir la possibilité de refuser.
 
 
 
