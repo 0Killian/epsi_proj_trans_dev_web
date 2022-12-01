@@ -7,17 +7,17 @@ CREATE TABLE `fiche_suivi` (
     `prix` int NOT NULL,
     `temps_travail` int NOT NULL,
     `photo` varchar(50),
-    `id_client` bigint NOT NULL,
+    `id_client` int NOT NULL,
     `en_cours` bool NOT NULL,
     `client_accepte` bool NOT NULL,
     PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE `poste` (
     `id` int NOT NULL AUTO_INCREMENT,
     `nom` varchar(20) NOT NULL,
     PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE `operation` (
     `id` int NOT NULL AUTO_INCREMENT,
@@ -32,14 +32,14 @@ CREATE TABLE `operation` (
     `id_prochain_poste` int NOT NULL,
     `date` DATETIME NOT NULL DEFAULT NOW(),
     PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE `client` (
     `id` int NOT NULL AUTO_INCREMENT,
     `email` varchar(80) NOT NULL UNIQUE,
     `nom` varchar(50) NOT NULL,
     PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE `bijou` (
     `id` int NOT NULL AUTO_INCREMENT,
@@ -47,7 +47,7 @@ CREATE TABLE `bijou` (
     `commentaire` TEXT NOT NULL,
     `prix` int NOT NULL,
     PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB;
 
 ALTER TABLE `fiche_suivi` ADD CONSTRAINT `fk_client` FOREIGN KEY (`id_client`) REFERENCES `client`(`id`);
 ALTER TABLE `operation` ADD CONSTRAINT `fk_post` FOREIGN KEY (`id_poste`) REFERENCES `poste`(`id`);
