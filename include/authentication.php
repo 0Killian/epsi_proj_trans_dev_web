@@ -1,6 +1,7 @@
 <?php
 
 include_once("../include/config.php");
+include_once("../include/messages.php");
 
 class user
 {
@@ -91,7 +92,17 @@ class user
         }
     }
 
-    public function disconnect()
+    public static function redirect_unauthenticated()
+    {
+        if(!self::is_authenticated())
+        {
+            add_error("Vous devez être connecté pour accéder à cette page !");
+            header('Location: /login.php?next=' . urlencode($_SERVER['REQUEST_URI']));
+            die();
+        }
+    }
+
+    public static function disconnect()
     {
         unset($_SESSION["auth"]);
     }

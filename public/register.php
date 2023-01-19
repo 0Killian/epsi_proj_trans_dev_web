@@ -3,10 +3,9 @@
 session_start();
 include("../include/authentication.php");
 include("../include/forms.php");
-include("../include/messages.php");
 
 $inputs = get_inputs(["name", "forename", "email", "password"], INPUT_POST);
-if(isset($inputs->name) || isset($inputs->forename) || isset($inputs->email) || isset($inputs->password))
+if(isset($inputs->name) && isset($inputs->forename) && isset($inputs->email) && isset($inputs->password))
 {
     if(!user::register($inputs->name, $inputs->forename, $inputs->email, $inputs->password))
     {

@@ -9,8 +9,18 @@ class config
 
     const DATABASE_PDO_URL = "mysql:host=" . self::DATABASE_URL . ";dbname=" . self::DATABASE_NAME;
 
+    const DEBUG_MODE = true; // true : mode développement, false : mode production -> Changer la variable quand mise
+                             // en production !
+
     public static function GetPDO(): PDO
     {
-        return new PDO(self::DATABASE_PDO_URL, self::DATABASE_USERNAME, self::DATABASE_PASSWORD);
+        $pdo = new PDO(self::DATABASE_PDO_URL, self::DATABASE_USERNAME, self::DATABASE_PASSWORD);
+
+        if(self::DEBUG_MODE)
+        {
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        }
+
+        return $pdo;
     }
 };
