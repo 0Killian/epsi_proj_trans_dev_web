@@ -13,8 +13,6 @@ $bijoux_en_vente = $requete->fetchAll();
 
 ?>
 
-    <h1>Bienvenue sur Chimère !</h1>
-
 <?php
 foreach($bijoux_en_vente as $bijoux)
 {
