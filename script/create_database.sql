@@ -56,12 +56,14 @@ CREATE TABLE `jewel` (
     `name` varchar(50) NOT NULL,
     `description` TEXT NOT NULL,
     `price` float NOT NULL,
+    `image` VARCHAR(50) NOT NULL DEFAULT '/uploads/default.svg',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `user` (
-     `id` int NOT NULL AUTO_INCREMENT,
-     `name` varchar(50) NOT NULL,
+                        `id` int NOT NULL AUTO_INCREMENT,
+
+                        `name` varchar(50) NOT NULL,
      `forename` varchar(50) NOT NULL,
      `email` varchar(120) NOT NULL,
      `password` varchar(60) NOT NULL,
