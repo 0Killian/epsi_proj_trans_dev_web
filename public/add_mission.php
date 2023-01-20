@@ -1,7 +1,13 @@
 <?php
 session_start();
 
-include("../include/config.php");
+include("../include/authentication.php");
+include("../include/forms.php");
+
+user::redirect_unauthenticated();
+
+$inputs = get_inputs(["csrf_token"], INPUT_POST);
+$client_id = filter_input(INPUT_GET, "client_id");
 
 $_SESSION["token"] = uniqid();
 
@@ -12,13 +18,6 @@ include("../include/header.php");
 
     <form action="./add_mission.php" method="post">
         <input type="hidden" value="<?= $_SESSION["token"] ?>" name="csrf_token" id="csrf_token">
-
-        <hr data-content="Client" class="hr-text">
-        <div class="input-group">
-            <span class="input-group-text">Prénom - Nom</span>
-            <input type="text" aria-label="Prénom" class="form-control">
-            <input type="text" aria-label="Nom" class="form-control">
-        </div>
 
     </form>
 

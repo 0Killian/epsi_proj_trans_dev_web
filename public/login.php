@@ -12,9 +12,11 @@ if(user::is_authenticated())
 }
 
 $inputs = get_inputs(["email", "password", "stay_connected"], INPUT_POST);
+$next = filter_input(INPUT_GET, "next");
 if(isset($inputs->email) || isset($inputs->password))
 {
     user::login_from_email_password($inputs->email, $inputs->password);
+
     if(user::is_authenticated())
     {
         if(isset($inputs->stay_connected) && $inputs->stay_connected == "1")
@@ -23,7 +25,14 @@ if(isset($inputs->email) || isset($inputs->password))
         }
 
         add_success("Vous êtes authentifiés !");
-        header("Location: /index.php");
+        if($next != "")
+        {
+            header('Location: ' . $next);
+        }
+        else
+        {
+            header("Location: /index.php");
+        }
     }
     else
     {
@@ -39,6 +48,11 @@ include("../include/header.php");
 
 ?>
 
+<form action="/login.php<?= (isset($next) && $next != "") ? "?next=" . urlencode($next) : ""?>" method="post">
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input class="form-control" type="email" name="email" id="email" required/>
+    </div>
 <div class="container-login">
     <div class="logo-user-login">
         <i class="bi bi-person-fill"</i>
