@@ -3,7 +3,6 @@
 session_start();
 include("../include/authentication.php");
 include("../include/forms.php");
-include("../include/messages.php");
 
 if(user::is_authenticated())
 {
@@ -48,11 +47,6 @@ include("../include/header.php");
 
 ?>
 
-<form action="/login.php<?= (isset($next) && $next != "") ? "?next=" . urlencode($next) : ""?>" method="post">
-    <div class="form-group">
-        <label for="email">Email</label>
-        <input class="form-control" type="email" name="email" id="email" required/>
-    </div>
 <div class="container-login">
     <div class="logo-user-login">
         <i class="bi bi-person-fill"</i>
@@ -60,9 +54,9 @@ include("../include/header.php");
             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
         </svg>
     </div>
-    <form action="/login.php" method="post">
+    <form action="/login.php<?= (isset($next) && $next != "") ? "?next=" . urlencode($next) : ""?>" method="post">
         <div class="form-group">
-            <label for="email">Utilisateur :</label>
+            <label for="email">Adresse E-Mail :</label>
             <input class="form-control" type="email" name="email" id="email" required/>
         </div>
 

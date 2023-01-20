@@ -34,22 +34,22 @@ include("../include/header.php");
     </div>
 <form action="/register.php" method="post" class="form-register">
         <div class="form-group">
-            <label for="name">Nom</label>
+            <label for="name">Nom :</label>
             <input class="form-control" type="text" name="name" id="name" required/>
         </div>
 
         <div class="form-group">
-            <label for="forename">Prénom</label>
+            <label for="forename">Prénom :</label>
             <input class="form-control" type="text" name="forename" id="forename" required/>
         </div>
 
         <div class="form-group">
-            <label for="email">Email</label>
+            <label for="email">Email :</label>
             <input class="form-control" type="email" name="email" id="email" required/>
         </div>
 
         <div class="form-group">
-            <label for="password">Mot de passe</label>
+            <label for="password">Mot de passe :</label>
             <input class="form-control" type="password" name="password" id="password" required/>
         </div>
         <button class="button button-primary" id="register-button">Créer un compte</button>
