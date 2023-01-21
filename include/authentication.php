@@ -2,6 +2,7 @@
 
 include_once("../include/config.php");
 include_once("../include/messages.php");
+include_once("../include/string.php");
 
 class user
 {
@@ -34,18 +35,13 @@ class user
             return;
         }
 
-        $characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        $length = 30;
-        $token = "";
-
-        for ($i = 0; $i < $length; $i++) {
-            $token = $token . $characters[rand(0, strlen($characters)-1)];
-        }
+        $token = rand_string(30);
 
         $pdo = config::GetPDO();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $q = $pdo->prepare("UPDATE user SET auth_token = :auth_token WHERE id = :id");
-        $q->execute([":auth_token" => $token, ":id" => $_SESSION["auth"]["id"]]);
+        $query = $pdo->prepare("UPDATE user SET auth_token = :auth_token WHERE id = :id");
+        $query->bindParam(":auth_token", $token);
+        $query->bindParam(":id", $_SESSION["auth"]["id"]);
+        $query->execute();
 
         setcookie("auth_token", $token);
     }
@@ -64,10 +60,10 @@ class user
     private static function login_from_auth_token($auth_token)
     {
         $pdo = config::GetPDO();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $q = $pdo->prepare("SELECT * FROM user WHERE auth_token = :auth_token");
-        $q->execute([ ":auth_token" => $auth_token ]);
-        $data = $q->fetchAll();
+        $query = $pdo->prepare("SELECT * FROM user WHERE auth_token = :auth_token");
+        $query->bindParam(":auth_token", $auth_token);
+        $query->execute();
+        $data = $query->fetchAll();
 
         if (count($data) != 1) {
             return;
@@ -79,9 +75,10 @@ class user
     public static function login_from_email_password($email, $password)
     {
         $pdo = config::GetPDO();
-        $q = $pdo->prepare("SELECT * FROM user WHERE email = :email");
-        $q->execute([":email" => $email]);
-        $data = $q->fetchAll();
+        $query = $pdo->prepare("SELECT * FROM user WHERE email = :email");
+        $query->bindParam(":email", $email);
+        $query->execute();
+        $data = $query->fetchAll();
 
         if (count($data) != 1) {
             return;
@@ -102,9 +99,39 @@ class user
         }
     }
 
+    public static function get_jobs()
+    {
+        $pdo = config::GetPDO();
+
+        $query = $pdo->prepare("
+            SELECT job.* FROM job
+            INNER JOIN occupation on job.id = occupation.id_job
+            INNER JOIN user on user.id = occupation.id_user
+            WHERE user.id = :id");
+
+        $query->bindParam(":id", $_SESSION["auth"]["id"]);
+        $query->execute();
+        return $query->fetchAll();
+    }
+
+    public static function has_job($job_name): bool
+    {
+        $jobs = user::get_jobs();
+        foreach($jobs as $job)
+        {
+            if($job["name"] == $job_name)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static function disconnect()
     {
         unset($_SESSION["auth"]);
+        setcookie("auth_token", "", time() - 3600);
     }
 }
 

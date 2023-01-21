@@ -7,7 +7,7 @@ include("../include/forms.php");
 user::redirect_unauthenticated();
 
 $inputs = get_inputs(["name", "email"], INPUT_POST);
-if(isset($inputs->name) || isset($inputs->email))
+if(isset($inputs->name) && isset($inputs->email))
 {
     $pdo = config::GetPDO();
     $query = $pdo->prepare("INSERT INTO client (email, name) VALUES(:email, :name);");

@@ -7,10 +7,9 @@ class config
     const DATABASE_USERNAME = "bijouterie_chimere";
     const DATABASE_PASSWORD = "bijouterie_chimere";
 
-    const DATABASE_PDO_URL = "mysql:host=" . self::DATABASE_URL . ";dbname=" . self::DATABASE_NAME;
+    const DATABASE_PDO_URL = "mysql:host=" . self::DATABASE_URL . ";dbname=" . self::DATABASE_NAME . ";charset=utf8";
 
-    const DEBUG_MODE = true; // true : mode développement, false : mode production -> Changer la variable quand mise
-                             // en production !
+    const DEBUG_MODE = true;
 
     public static function GetPDO(): PDO
     {

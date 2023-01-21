@@ -3,13 +3,14 @@ USE bijouterie_chimere;
 
 CREATE TABLE `request` (
     `id` int NOT NULL AUTO_INCREMENT,
-    `type` int NOT NULL,
-    `estimated_price` int NOT NULL,
-    `estimated_work_time` int NOT NULL,
-    `image` varchar(50),
+    `type` bool NOT NULL, /* false: creation, true: transformation */
+    `jewel_estimation` float DEFAULT NULL,
+    `estimated_price` float NOT NULL,
+    `estimated_work_time` float NOT NULL,
+    `image` varchar(50) NOT NULL,
     `id_client` int NOT NULL,
-    `in_progess` bool NOT NULL,
-    `accepted` bool NOT NULL,
+    `in_progress` bool NOT NULL DEFAULT true,
+    `accepted` bool NOT NULL DEFAULT false,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -56,19 +57,18 @@ CREATE TABLE `jewel` (
     `name` varchar(50) NOT NULL,
     `description` TEXT NOT NULL,
     `price` float NOT NULL,
-    `image` VARCHAR(50) NOT NULL DEFAULT '/uploads/default.svg',
+    `image` VARCHAR(50) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `user` (
-                        `id` int NOT NULL AUTO_INCREMENT,
-
-                        `name` varchar(50) NOT NULL,
-     `forename` varchar(50) NOT NULL,
-     `email` varchar(120) NOT NULL,
-     `password` varchar(60) NOT NULL,
-     `auth_token` varchar(30),
-     PRIMARY KEY (`id`)
+    `id` int NOT NULL AUTO_INCREMENT,
+    `name` varchar(50) NOT NULL,
+    `forename` varchar(50) NOT NULL,
+    `email` varchar(120) NOT NULL,
+    `password` varchar(60) NOT NULL,
+    `auth_token` varchar(30),
+    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `occupation` (

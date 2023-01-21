@@ -12,7 +12,7 @@ if(user::is_authenticated())
 
 $inputs = get_inputs(["email", "password", "stay_connected"], INPUT_POST);
 $next = filter_input(INPUT_GET, "next");
-if(isset($inputs->email) || isset($inputs->password))
+if(isset($inputs->email) && isset($inputs->password))
 {
     user::login_from_email_password($inputs->email, $inputs->password);
 
@@ -32,13 +32,13 @@ if(isset($inputs->email) || isset($inputs->password))
         {
             header("Location: /index.php");
         }
+
+        die();
     }
     else
     {
         add_error("Email ou mot de passe incorrect !");
-        header("Location: /login.php");
     }
-    die();
 }
 
 include("../include/header.php");
