@@ -140,11 +140,19 @@ include("../include/header.php");
                 <script>
                     let show_client_information = document.getElementById("show_client_information");
                     let information_client = document.getElementById("information_client");
+                    let toggle_type = document.getElementById("toggle_type");
                     show_client_information.addEventListener("click", () => {
                         if(getComputedStyle(information_client).display != "none"){
                             information_client.style.display = "none";
+                            show_client_information.style.backgroundColor = "#D9D9D9";
+                            toggle_type.style.visibility = "visible";
                         } else {
                             information_client.style.display = "block";
+                            information_client.style.width = "1040px";
+                            information_client.style.height = "350px";
+                            show_client_information.style.backgroundColor ="green";
+                            toggle_type.style.visibility = "hidden";
+
                         }
                     })
                 </script>

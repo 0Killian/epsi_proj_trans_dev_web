@@ -22,21 +22,21 @@ if(isset($inputs->name) && isset($inputs->email))
 include("../include/header.php");
 
 ?>
+    <div class="add_client">
+        <form action="/add_client.php" method="post">
+            <div class="form-group">
+                <label for="name">Nom</label>
+                <input class="form-control" type="text" name="name" id="name" required/>
+            </div>
 
-    <form action="/add_client.php" method="post">
-        <div class="form-group">
-            <label for="name">Nom</label>
-            <input class="form-control" type="text" name="name" id="name" required/>
-        </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input class="form-control" type="email" name="email" id="email" required/>
+            </div>
 
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input class="form-control" type="email" name="email" id="email" required/>
-        </div>
-
-        <button class="button button-primary">Créer un client</button>
-    </form>
-
+            <button class="button button-primary">Créer un client</button>
+        </form>
+    </div>
 <?php
 
 include("../include/footer.php");
