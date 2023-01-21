@@ -6,6 +6,7 @@ body {
     background-color: #84837D;
     margin: 0;
     max-width: 1240px;
+    max-height: 170px;
 }
 
 .navbar {
@@ -124,4 +125,53 @@ button  {
     border-radius: 10px;
     margin-left: 140px;
     margin-top: 25px;
+}
+
+.container-add-mission {
+    background-color: #84837D;
+    margin: auto;
+    width: 1040px;
+    height: 350px;
+}
+
+.client-creation {
+    display: flex;
+    top: 165px;
+    position: absolute;
+    left: 815px;
+}
+
+#information_client {
+    display: none; /*------------il faudra le modifier--------------*/
+    background-color: #84837D;
+    position: absolute;
+    left: 100px;
+    top: 350px;
+    z-index: 2;
+}
+
+#toggle_type {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.content {
+    display: flex;
+
+}
+
+.add-image {
+    margin-top: 275px;
+}
+
+.creation-transformation {
+    display: block;
+    margin: auto;
+    padding-top: 65px;
+}
+
+#show_client_information {
+    position: absolute;
+    left: -80px;
+    top: 0;
 }

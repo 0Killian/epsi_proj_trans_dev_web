@@ -112,49 +112,92 @@ if(isset($inputs->type))
 include("../include/header.php");
 ?>
 
-    <h1>Création d'une fiche de suivi</h1>
+    <div class="container-add-mission">
+        <div id="information_client">
 
-    <form enctype="multipart/form-data" action="./add_mission.php" method="post">
-        <input type="hidden" value="<?= $_SESSION["token"] ?>" name="csrf_token" id="csrf_token">
+            <h2>Client</h2>
 
-        <h2>Client</h2>
+            <label for="client">Client selectionné : </label>
+            <select name="client" id="client" required>
+                <?php foreach($clients as $client): ?>
+                    <option value="<?= $client["id"] ?>" <?= isset($client_id) && $client_id != "" ? "selected" : "" ?> ><?= htmlspecialchars($client["name"]) ?> | <?= htmlspecialchars($client["email"]) ?></option>
+                <?php endforeach; ?>
+            </select>
 
-        <label for="client">Client selectionné : </label>
-        <select name="client" id="client" required>
-            <?php foreach($clients as $client): ?>
-                <option value="<?= $client["id"] ?>" <?= isset($client_id) && $client_id != "" ? "selected" : "" ?> ><?= htmlspecialchars($client["name"]) ?> | <?= htmlspecialchars($client["email"]) ?></option>
-            <?php endforeach; ?>
-        </select>
-        <a href="add_client.php">Ajouter un client</a>
-
-        <input type="hidden" name="type" id="type" value="creation">
-
-        <button type="button" id="toggle_type">Création</button>
-
-        <div id="creation">
-            <h2>Création</h2>
+            <a href="add_client.php">Ajouter un client</a>
         </div>
+        <form enctype="multipart/form-data" action="./add_mission.php" method="post">
+            <input type="hidden" value="<?= $_SESSION["token"] ?>" name="csrf_token" id="csrf_token">
 
-        <div id="transformation" style="display: none;">
-            <h2>Transformation/Réparation</h2>
+            <div class="client-creation">
 
-            <label for="jewel_estimation">Estimation du bijou initial (en €)</label>
-            <input type="number" step="0.01" name="jewel_estimation" id="jewel_estimation">
-        </div>
+                <!----------------------------------------------------->
 
-        <label for="jewel_image">Image du bijou</label>
-        <input type="file" accept="image/jpeg, image/png" name="jewel_image" id="jewel_image" required>
+                <button type="button" id="toggle_type">Création</button>
 
-        <img src="" id="jewel_image_preview" alt="">
+                <button type="button" id="show_client_information">Client</button>
 
-        <label for="estimated_time">Devis (temps de travail estimé, en h)</label>
-        <input type="number" step="0.1" name="estimated_time" id="estimated_time" required>
+                <script>
+                    let show_client_information = document.getElementById("show_client_information");
+                    let information_client = document.getElementById("information_client");
+                    show_client_information.addEventListener("click", () => {
+                        if(getComputedStyle(information_client).display != "none"){
+                            information_client.style.display = "none";
+                        } else {
+                            information_client.style.display = "block";
+                        }
+                    })
+                </script>
 
-        <label for="estimated_price">Prix estimé (en €)</label>
-        <input type="number" step="0.1" name="estimated_price" id="estimated_price" required>
+                <!----------------------------------------------------->
 
-        <input type="submit" value="Créer une mission">
-    </form>
+            </div>
+
+            <input type="hidden" name="type" id="type" value="creation">
+
+            <div class="content">
+                <div class="add-image">
+                    <div>
+                        <label for="jewel_image" style="visibility: hidden">Image du bijou</label>
+                        <img src="" id="jewel_image_preview" alt="" style="width: 270px; height: 270px; position: absolute; left: 130px; top: 233px;">
+                    </div>
+                    <input type="file" accept="image/jpeg, image/png" name="jewel_image" id="jewel_image" required>
+
+                </div>
+
+                <div class="creation-transformation">
+                    <div id="transformation" style="display: none;">
+                        <h2>Transformation/Réparation</h2>
+
+                        <label for="jewel_estimation">Estimation du bijou initial (en €)</label>
+                        <input type="number" step="0.01" name="jewel_estimation" id="jewel_estimation" style="margin-left: 31px; margin-top: 20px; margin-bottom: 20px">
+                    </div>
+
+                    <div id="creation">
+                        <h2>Création</h2>
+                    </div>
+
+                    <div>
+                        <label for="estimated_time">Devis (temps de travail estimé, en h)</label>
+                        <input type="number" step="0.1" name="estimated_time" id="estimated_time" required>
+                    </div>
+
+                    <div style="margin-bottom: 20px; margin-top: 20px;">
+                        <label for="estimated_price">Prix estimé (en €)</label>
+                        <input type="number" step="0.1" name="estimated_price" id="estimated_price" required style="margin-left: 133px">
+                    </div>
+
+                    <div>
+                        <input type="submit" value="Créer une mission">
+                    </div>
+
+                </div>
+            </div>
+
+
+
+        </form>
+    </div>
 
 <script>
     document.getElementById("jewel_image").onchange = () => {
