@@ -6,7 +6,7 @@ include_once("../include/string.php");
 
 class user
 {
-    public static function register($name, $forename, $email, $password): bool
+    public static function register($name, $forename, $email, $password, $job): bool
     {
         $pdo = config::GetPDO();
         $q = $pdo->prepare("SELECT * FROM user WHERE email = :email");
@@ -18,12 +18,13 @@ class user
             return false;
         }
 
-        $q = $pdo->prepare("INSERT INTO user (name, forename, email, password) VALUES(:name, :forename, :email, :password)");
+        $q = $pdo->prepare("INSERT INTO user (name, forename, email, password, id_job) VALUES(:name, :forename, :email, :password, (SELECT id FROM job WHERE name = :job))");
         $q->execute([
             ":name" => $name,
             ":forename" => $forename,
             ":email" => $email,
-            ":password" => password_hash($password, PASSWORD_BCRYPT)
+            ":password" => password_hash($password, PASSWORD_BCRYPT),
+            ":job" => $job
         ]);
 
         return true;
@@ -110,7 +111,7 @@ class user
 
         $query->bindParam(":id", $_SESSION["auth"]["id"]);
         $query->execute();
-        $jobs = $query->fetchAll()[0];
+        $jobs = $query->fetchAll();
         if(count($jobs) == 0)
         {
             return [];
