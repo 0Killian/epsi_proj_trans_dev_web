@@ -99,33 +99,24 @@ class user
         }
     }
 
-    public static function get_jobs()
+    public static function get_job()
     {
         $pdo = config::GetPDO();
 
         $query = $pdo->prepare("
             SELECT job.* FROM job
-            INNER JOIN occupation on job.id = occupation.id_job
-            INNER JOIN user on user.id = occupation.id_user
+            INNER JOIN user on user.id_job = job.id
             WHERE user.id = :id");
 
         $query->bindParam(":id", $_SESSION["auth"]["id"]);
         $query->execute();
-        return $query->fetchAll();
-    }
-
-    public static function has_job($job_name): bool
-    {
-        $jobs = user::get_jobs();
-        foreach($jobs as $job)
+        $jobs = $query->fetchAll()[0];
+        if(count($jobs) == 0)
         {
-            if($job["name"] == $job_name)
-            {
-                return true;
-            }
+            return [];
         }
 
-        return false;
+        return $jobs[0]["name"];
     }
 
     public static function disconnect()

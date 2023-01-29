@@ -3,59 +3,21 @@ session_start();
 
 include("../include/authentication.php");
 include("../include/forms.php");
-
-function upload_file($name)
-{
-    $path = "/uploads/";
-    do
-    {
-        $path .= rand_string(50 - 13); // max path - "/uploads/" - ".xxx"
-
-        if($_FILES[$name]["type"] == 'image/jpeg')
-        {
-            $path .= ".jpg";
-        }
-        elseif($_FILES[$name]["type"] == 'image/png')
-        {
-            $path .= ".png";
-        }
-        else
-        {
-            add_error("Le fichier envoyé est invalide !");
-            header('Location: /add_mission.php');
-            die();
-        }
-
-    } while(file_exists($path));
-
-    if(!move_uploaded_file($_FILES[$name]["tmp_name"], "." . $path))
-    {
-        return false;
-    }
-
-    return $path;
-}
+include("../include/upload.php");
 
 user::redirect_unauthenticated();
 
-$inputs = get_inputs(["csrf_token", "type", "client", "jewel_estimation", "estimated_time", "estimated_price"], INPUT_POST);
+$inputs = get_inputs(["csrf_token", "type", "client", "jewel_estimation", "estimated_time", "estimated_price", "operator"], INPUT_POST);
 $client_id = filter_input(INPUT_GET, "client_id");
 
-$_SESSION["token"] = uniqid();
-
-$pdo = config::GetPDO();
-$query = $pdo->prepare("SELECT * FROM client;");
-$query->execute();
-$clients = $query->fetchAll();
-
-if(!user::has_job("Chef d'équipe"))
+if(user::get_job() != "Chef d'équipe")
 {
     add_error("Vous n'avez pas l'autorisation d'accéder à cette page.");
     header('Location: /index.php');
     die();
 }
 
-if(isset($inputs->type))
+if(isset($inputs->type) && isset($inputs->operator) && isset($inputs->csrf_token) && $inputs->csrf_token == $_SESSION["token"])
 {
     if(isset($inputs->estimated_time) && isset($inputs->estimated_price) && isset($inputs->client))
     {
@@ -77,9 +39,15 @@ if(isset($inputs->type))
                 $query->bindParam(":id_client", $inputs->client);
                 $query->bindParam(":jewel_estimation", $inputs->jewel_estimation);
                 $query->execute();
+                $id_request = $pdo->lastInsertId();
+
+                $query = $pdo->prepare("INSERT INTO operation (id_operator, id_request) VALUES (:id_operator, :id_request);");
+                $query->bindParam(":id_operator", $inputs->operator);
+                $query->bindParam(":id_request", $id_request);
+                $query->execute();
 
                 add_success("Une nouvelle fiche mission a été créée");
-                header('Location: /missions.php');
+                header('Location: /mission.php?id=' . $id_request);
                 die();
             }
         }
@@ -109,59 +77,46 @@ if(isset($inputs->type))
     }
 }
 
+$_SESSION["token"] = uniqid();
+
+$pdo = config::GetPDO();
+$query = $pdo->prepare("SELECT * FROM client;");
+$query->execute();
+$clients = $query->fetchAll();
+
+$query = $pdo->prepare("
+        SELECT user.id AS user_id, user.name AS user_name, user.forename AS user_forename, job.name AS job_name FROM user
+        INNER JOIN job on user.id_job = job.id
+        WHERE job.name != 'Chef d\'équipe';");
+$query->execute();
+$operators = $query->fetchAll();
+
 include("../include/header.php");
 ?>
 
     <div class="container-add-mission">
-        <div id="information_client">
-
-            <h2>Client</h2>
-
-            <label for="client">Client selectionné : </label>
-            <select name="client" id="client" required>
-                <?php foreach($clients as $client): ?>
-                    <option value="<?= $client["id"] ?>" <?= isset($client_id) && $client_id != "" ? "selected" : "" ?> ><?= htmlspecialchars($client["name"]) ?> | <?= htmlspecialchars($client["email"]) ?></option>
-                <?php endforeach; ?>
-            </select>
-
-            <a href="add_client.php">Ajouter un client</a>
-        </div>
         <form enctype="multipart/form-data" action="./add_mission.php" method="post">
             <input type="hidden" value="<?= $_SESSION["token"] ?>" name="csrf_token" id="csrf_token">
+            <input type="hidden" name="type" id="type" value="creation">
 
             <div class="client-creation">
-
-                <!----------------------------------------------------->
-
                 <button type="button" id="toggle_type">Création</button>
-
                 <button type="button" id="show_client_information">Client</button>
-
-                <script>
-                    let show_client_information = document.getElementById("show_client_information");
-                    let information_client = document.getElementById("information_client");
-                    let toggle_type = document.getElementById("toggle_type");
-                    show_client_information.addEventListener("click", () => {
-                        if(getComputedStyle(information_client).display != "none"){
-                            information_client.style.display = "none";
-                            show_client_information.style.backgroundColor = "#D9D9D9";
-                            toggle_type.style.visibility = "visible";
-                        } else {
-                            information_client.style.display = "block";
-                            information_client.style.width = "1040px";
-                            information_client.style.height = "350px";
-                            show_client_information.style.backgroundColor ="green";
-                            toggle_type.style.visibility = "hidden";
-
-                        }
-                    })
-                </script>
-
-                <!----------------------------------------------------->
-
             </div>
 
-            <input type="hidden" name="type" id="type" value="creation">
+            <div id="information_client">
+
+                <h2>Client</h2>
+
+                <label for="client">Client selectionné : </label>
+                <select name="client" id="client" required>
+                    <?php foreach($clients as $client): ?>
+                        <option value="<?= $client["id"] ?>" <?= isset($client_id) && $client_id != "" ? "selected" : "" ?> ><?= htmlspecialchars($client["name"]) ?> | <?= htmlspecialchars($client["email"]) ?></option>
+                    <?php endforeach; ?>
+                </select>
+
+                <a href="add_client.php">Ajouter un client</a>
+            </div>
 
             <div class="content">
                 <div class="add-image">
@@ -170,7 +125,6 @@ include("../include/header.php");
                         <img src="" id="jewel_image_preview" alt="" style="width: 270px; height: 270px; position: absolute; left: 130px; top: 233px;">
                     </div>
                     <input type="file" accept="image/jpeg, image/png" name="jewel_image" id="jewel_image" required>
-
                 </div>
 
                 <div class="creation-transformation">
@@ -196,15 +150,41 @@ include("../include/header.php");
                     </div>
 
                     <div>
+                        <label for="operator">Prochain opérateur</label>
+                        <select name="operator" id="operator" required>
+                            <?php foreach($operators as $operator): ?>
+                                <option value="<?= $operator["user_id"] ?>"><?= htmlspecialchars($operator["user_forename"]) ?> <?= htmlspecialchars($operator["user_name"]) ?> | <?= htmlspecialchars($operator["job_name"])?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <div>
                         <input type="submit" value="Créer une mission">
                     </div>
 
                 </div>
             </div>
-
-
-
         </form>
+
+        <script>
+            let show_client_information = document.getElementById("show_client_information");
+            let information_client = document.getElementById("information_client");
+            let toggle_type = document.getElementById("toggle_type");
+            show_client_information.addEventListener("click", () => {
+                if(getComputedStyle(information_client).display !== "none"){
+                    information_client.style.display = "none";
+                    show_client_information.style.backgroundColor = "#D9D9D9";
+                    toggle_type.style.visibility = "visible";
+                } else {
+                    information_client.style.display = "block";
+                    information_client.style.width = "1040px";
+                    information_client.style.height = "350px";
+                    show_client_information.style.backgroundColor ="green";
+                    toggle_type.style.visibility = "hidden";
+
+                }
+            })
+        </script>
     </div>
 
 <script>

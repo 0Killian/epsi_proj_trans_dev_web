@@ -6,6 +6,13 @@ include("../include/forms.php");
 
 user::redirect_unauthenticated();
 
+if(user::get_job() != "Chef d'équipe")
+{
+    add_error("Vous n'avez pas accès à cette page");
+    header("Location: /index.php");
+    die();
+}
+
 $inputs = get_inputs(["name", "email"], INPUT_POST);
 if(isset($inputs->name) && isset($inputs->email))
 {
