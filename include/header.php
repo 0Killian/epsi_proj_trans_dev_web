@@ -12,37 +12,39 @@
 </head>
 <body>
 <?php if(!isset($no_navbar) || !$no_navbar): ?>
-<div class="container">
+<div class="container-fluid">
         <div class="navbar">
             <a href="/" class="logo">
-                <img src="/uploads/default.svg" aria-label="Bootstrap"/>
+                <img src="/imgs/logo.svg" style="width: 205px; height: 154px; margin: auto;" aria-label="logo"/>
             </a>
 
             <ul class="nav">
-                <li id="Main">
-                    <a href="/index.php" class="nav-link text-">
+                <li class="others">
+                    <a href="/index.php" class="nav-link text-black">
                         Accueil
                     </a>
                 </li>
                 <li class="others">
-                    <a href="/add_mission.php" class="nav-link text-white">
+                    <a href="/add_mission.php" class="nav-link text-black">
                         Nouvelle mission
                     </a>
                 </li>
                 <li class="others">
-                    <a href="/missions.php" class="nav-link text-white">
+                    <a href="/missions.php" class="nav-link text-black">
                         Missions en cours
                     </a>
                 </li>
                 <?php if(user::is_authenticated() && user::get_job() == "Chef d'équipe"): ?>
                     <li class="others">
-                        <a href="/register.php" class="nav-link text-white">
+                        <a href="/register.php" class="nav-link text-black">
                             Ajouter un employé
                         </a>
                     </li>
                 <?php endif; ?>
+            </ul>
+            <ul class="nav">
                 <li class="register-user">
-                    <a href="/login.php" class="nav-link text-black">
+                    <a href="/<?= user::is_authenticated() ? "logout.php" : "login.php" ?>" class="nav-link text-black">
                         <i class="bi bi-person-fill" style="margin-left: 0px; margin-top: 0px;"></i>
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16" style="margin-left: 0px; margin-top: 0px;">
                             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>

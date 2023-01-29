@@ -8,13 +8,6 @@ config::RedirectIfNotConfigured();
 
 user::redirect_unauthenticated();
 
-if(user::get_job() != "Chef d'équipe" && user::get_job() != "Contrôleur")
-{
-    add_error("Vous n'avez pas accès à cette page");
-    header("Location: /index.php");
-    die();
-}
-
 $id_mission = filter_input(INPUT_GET, "id");
 
 $pdo = config::GetPDO();
@@ -99,14 +92,14 @@ foreach($operations as $operation)
 
 if($mission["in_progress"])
 {
-    if($mission["validated"]): ?>
+    if($mission["validated"] && user::get_job() == "Chef d'équipe"): ?>
         <a href="send_to_client.php?id=<?= $mission["id"]; ?>">Envoyer au client</a>
     <?php else: ?>
-        <?php if($last_job != "Contrôleur"): ?>
+        <?php if($last_job != "Contrôleur" && (user::get_job() == "Chef d'équipe" || $_SESSION["auth"]["id"] == $operations[0]["id_operator"])): ?>
             <a href="operation.php?mission_id=<?= $mission["id"]; ?>">Opération en cours</a>
         <?php endif; ?>
 
-        <?php if(count($operations) > 1): ?>
+        <?php if(count($operations) > 1 && (user::get_job() == "Chef d'équipe" || user::get_job() == "Contrôleur")): ?>
             <a href="verify.php?id=<?= $operations[1]["id"] ?>">Contrôler</a>;
         <?php endif; ?>
     <?php endif;

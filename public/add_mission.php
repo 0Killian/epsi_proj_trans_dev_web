@@ -120,66 +120,69 @@ include("../include/header.php");
             <input type="hidden" name="type" id="type" value="creation">
 
             <div class="client-creation">
-                <button type="button" id="toggle_type">Création</button>
-                <button type="button" id="show_client_information">Client</button>
+                <button class="btn btn-secondary" type="button" id="toggle_type">Création</button>
+                <button class="btn btn-secondary" type="button" id="show_client_information">Client</button>
             </div>
 
-            <div id="information_client">
+            <div class="container-add-mission" id="information_client">
+                <div id="internal">
+                    <h2>Client</h2>
 
-                <h2>Client</h2>
-
-                <label for="client">Client selectionné : </label>
-                <select name="client" id="client" required>
-                    <?php foreach($clients as $client): ?>
-                        <option value="<?= $client["id"] ?>" <?= isset($client_id) && $client_id != "" ? "selected" : "" ?> ><?= htmlspecialchars($client["name"]) ?> | <?= htmlspecialchars($client["email"]) ?></option>
-                    <?php endforeach; ?>
-                </select>
-
-                <a href="add_client.php">Ajouter un client</a>
+                    <div class="form-group">
+                        <label for="client">Client selectionné : </label>
+                        <div class="d-flex" style="width: 450px;">
+                            <select class="form-control" name="client" id="client" required>
+                                <?php foreach($clients as $client): ?>
+                                    <option value="<?= $client["id"] ?>" <?= isset($client_id) && $client_id != "" ? "selected" : "" ?> ><?= htmlspecialchars($client["name"]) ?> | <?= htmlspecialchars($client["email"]) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <a href="add_client.php"><button class="btn btn-secondary" style="width: 175px; height: 100%; margin-left: 10px;" type="button">Ajouter un client</button></a>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="content">
-                <div class="add-image">
-                    <div>
-                        <label for="jewel_image" style="visibility: hidden">Image du bijou</label>
-                        <img src="" id="jewel_image_preview" alt="" style="width: 270px; height: 270px; position: absolute; left: 130px; top: 233px;">
-                    </div>
-                    <input type="file" accept="image/jpeg, image/png" name="jewel_image" id="jewel_image" required>
+                <div class="add-image form-group" style="width: 310px">
+                    <img src="uploads/default.svg" id="jewel_image_preview" alt="" style="width: 270px; height: 270px; position: absolute; left: 50px; top: 20px;">
+                    <input class="form-control" type="file" accept="image/jpeg, image/png" name="jewel_image" id="jewel_image" required>
                 </div>
 
                 <div class="creation-transformation">
                     <div id="transformation" style="display: none;">
                         <h2>Transformation/Réparation</h2>
 
-                        <label for="jewel_estimation">Estimation du bijou initial (en €)</label>
-                        <input type="number" step="0.01" name="jewel_estimation" id="jewel_estimation" style="margin-left: 31px; margin-top: 20px; margin-bottom: 20px">
+                        <div class="form-group">
+                            <label for="jewel_estimation">Estimation du bijou initial (en €)</label>
+                            <input class="form-control" type="number" step="0.01" name="jewel_estimation" id="jewel_estimation" style="margin-left: 31px; margin-top: 20px; margin-bottom: 20px">
+                        </div>
                     </div>
 
                     <div id="creation">
                         <h2>Création</h2>
                     </div>
 
-                    <div>
+                    <div class="form-group">
                         <label for="estimated_time">Devis (temps de travail estimé, en h)</label>
-                        <input type="number" step="0.1" name="estimated_time" id="estimated_time" required>
+                        <input class="form-control" type="number" step="0.1" name="estimated_time" id="estimated_time" required>
                     </div>
 
-                    <div style="margin-bottom: 20px; margin-top: 20px;">
+                    <div class="form-group">
                         <label for="estimated_price">Prix estimé (en €)</label>
-                        <input type="number" step="0.1" name="estimated_price" id="estimated_price" required style="margin-left: 133px">
+                        <input class="form-control" type="number" step="0.1" name="estimated_price" id="estimated_price" required>
                     </div>
 
-                    <div>
+                    <div class="form-group">
                         <label for="operator">Prochain opérateur</label>
-                        <select name="operator" id="operator" required>
+                        <select class="form-control" name="operator" id="operator" required>
                             <?php foreach($operators as $operator): ?>
                                 <option value="<?= $operator["user_id"] ?>"><?= htmlspecialchars($operator["user_forename"]) ?> <?= htmlspecialchars($operator["user_name"]) ?> | <?= htmlspecialchars($operator["job_name"])?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
 
-                    <div>
-                        <input type="submit" value="Créer une mission">
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit">Créer une mission</button>
                     </div>
 
                 </div>
@@ -195,11 +198,9 @@ include("../include/header.php");
             {
                 if(getComputedStyle(information_client).display !== "none"){
                     information_client.style.display = "none";
-                    show_client_information.style.backgroundColor = "#D9D9D9";
+                    show_client_information.style.backgroundColor = "";
                 } else {
                     information_client.style.display = "block";
-                    information_client.style.width = "1040px";
-                    information_client.style.height = "350px";
                     show_client_information.style.backgroundColor ="green";
                 }
             }

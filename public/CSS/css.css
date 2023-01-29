@@ -1,42 +1,96 @@
-body {
-    background-color: #1E1E1E;
+.cards_bijoux_cours {
+    width: 18rem;
+    border-radius: 5px;
+    margin: 100px;
+    text-decoration: none;
+    object-fit: cover;
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2rem;
 }
 
-.container {
+.card_bijou_cours{
+    position: relative;
+}
+
+.img_bijoux_cours{
+    max-width: 500px;
+    max-height: 250px;
+    text-align: center;
+    overflow: hidden;
+    border-radius: 5px 5px 0 0 ;
+    object-fit: scale-down;
+}
+
+.img_bijoux_cours img{
+    object-fit: contain;
+    width: 500px;
+}
+
+.bottom_cards {
+    text-decoration: none;
+    background-color: #DFCB1D;
+    color: #D9D9D9;
+    border-radius: 0 0 5px 5px;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.bottom_cards a {
+    color: #505050;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 1.2rem;
+}
+
+.title_bijoux_cours{
+    color: #DFCB1D;
+    text-align: center;
+    margin-top: 10px;
+    align-content: center;
+    font-size: 1.5rem;
+}
+
+body {
+    background-color: #1E1E1E;
+    color: white;
+}
+
+.container-fluid {
     background-color: #84837D;
     margin: 0;
-    max-width: 1240px;
+    width: 100vw;
     max-height: 170px;
 }
 
 .navbar {
+    width: 100%;
     display: inline-flex;
-}
-
-#Main {
-    background-color: #FFD700;
-    margin: auto;
-    padding: 10px 50px 10px 50px;
-    border-radius: 15px;
-    margin-left: 17px;
-    margin-right: 7px;
 }
 
 .others {
     border-radius: 15px;
     padding: 10px 20px 10px 20px;
     background-color: #D9D9D9;
+    color: black;
     margin: auto;
     margin-left: 7px;
     margin-right: 7px;
 }
 
+.others:hover
+{
+    background: #DFCB1D;
+    color: #505050;
+    transition: 0.25s all ease-in-out;
+}
+
 .register-user {
     border-radius: 15px;
     background-color: #D9D9D9;
-    padding: 5px 0px 5px 0px;
-    margin: auto;
-    margin-left: 17px;
+    padding: 5px 0;
+    margin: auto 50px;
 }
 
 .nav {
@@ -85,13 +139,20 @@ form {
     height: 41.7px;
 }
 
-button  {
-    border: none;
-    padding: 10px;
+.btn  {
     background-color: #D9D9D9;
-    border-radius: 10px;
-    margin-left: 155px;
-    margin-top: 30px;
+}
+
+.btn-primary {
+    background-color: #DFCB1D;
+    color: black;
+    border-color: transparent;
+}
+
+.btn-primary:hover
+{
+    background-color: darkgrey;
+    border-color: transparent;
 }
 
 .container-register  {
@@ -130,33 +191,55 @@ button  {
 .container-add-mission {
     background-color: #84837D;
     margin: auto;
-    width: 1040px;
-    height: 350px;
+    width: 1100px;
+    border-radius: 10px;
+    position: relative;
 }
 
 .client-creation {
     display: flex;
-    top: 165px;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    top: -20px;
     position: absolute;
-    left: 815px;
+    right: 20px;
     z-index: 3;
-    padding: auto;
-
+    width: 225px;
 }
 
 #information_client {
     display: none; /*------------il faudra le modifier--------------*/
     background-color: #84837D;
     position: absolute;
-    left: 100px;
-    top: 219px;
+    left: 0;
     z-index: 2;
+    padding: 25px;
+    width: 1100px;
+    height: 363.45px;
 }
 
-#toggle_type {
+.form-group > label
+{
+    color: white;
+}
+
+#information_client #internal
+{
+    margin: auto;
+}
+
+.btn-secondary {
     padding-left: 20px;
     padding-right: 20px;
     z-index: 3;
+    margin: 0;
+    background-color: #D9D9D9;
+    color: black;
+}
+
+.btn-secondary:hover {
+    background-color: #DFCB1D;
+    color: black;
 }
 
 .content {
@@ -171,13 +254,12 @@ button  {
 .creation-transformation {
     display: block;
     margin: auto;
-    padding-top: 65px;
+    /*width: 60%;*/
+    padding: 25px 0;
 }
 
 #show_client_information {
-    position: absolute;
-    left: -80px;
-    top: 0;
+    margin: 0;
 }
 
 .add_client {

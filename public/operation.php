@@ -89,9 +89,9 @@ if($job == "Contrôleur")
     die();
 }
 
-if(user::get_job() != "Chef d'équipe" && $_SESSION["auth"]["id"] == $operation["id_operator"])
+if(user::get_job() != "Chef d'équipe" && $_SESSION["auth"]["id"] != $operation["id_operator"])
 {
-    add_error("Vous n'avez pas accès à cette page");
+    add_error("Vous n'avez pas accès à cette page " . $operation["id_operator"] . " " . $_SESSION["auth"]["id"]);
     header("Location: /index.php");
     die();
 }
