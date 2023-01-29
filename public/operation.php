@@ -185,7 +185,7 @@ $_SESSION["token"] = uniqid();
 include "../include/header.php";
 ?>
 
-<form enctype="multipart/form-data" action="/operation.php" method="post">
+<form id="operation_form" enctype="multipart/form-data" action="/operation.php" method="post">
     <input type="hidden" value="<?= $_SESSION["token"] ?>" name="csrf_token" id="csrf_token">
     <input type="hidden" value="<?= $mission_id ?>" name="mission_id" id="mission_id">
 
@@ -195,14 +195,14 @@ include "../include/header.php";
     </div>
 
     <div>
-        <label for="work_time">Temps de travail</label>
+        <label id="operation_work_time" for="work_time">Temps de travail</label>
         <input type="number" name="work_time" id="work_time" value="<?= htmlspecialchars($operation["work_time"]); ?>" required>
     </div>
 
     <div>
         <div>
-            <label for="image" style="visibility: hidden">Image du bijou</label>
-            <img src="" id="image_preview" alt="" style="width: 270px; height: 270px; position: absolute; left: 130px; top: 233px;">
+            <label id="image_du_bijou" for="image" style="visibility: hidden">Image du bijou</label>
+            <img src="" id="image_preview" alt="" style="width: 270px; height: 270px; position: absolute; left: 115px; top: 233px;">
         </div>
         <input accept="image/jpeg, image/png" type="file" name="image" id="image">
     </div>
@@ -272,7 +272,7 @@ include "../include/header.php";
 
         </script>
 
-        <button type="button" onclick="add_metal()">Ajouter un métal</button>
+        <button id="metal_adding" type="button" onclick="add_metal()">Ajouter un métal</button>
     <?php elseif($job == 'Tailleur'): ?>
         <template id="add-gem">
             <form>
@@ -338,7 +338,7 @@ include "../include/header.php";
 
         </script>
 
-        <button type="button" onclick="add_gem()">Ajouter une pierre</button>
+        <button id="gem_adding" type="button" onclick="add_gem()">Ajouter une pierre</button>
     <?php endif; ?>
 
     <div>
@@ -352,7 +352,7 @@ include "../include/header.php";
     </div>
 
     <div>
-        <input type="submit" value="Créer une mission">
+        <input type="submit" id="operation_button" value="Prochain Opérateur">
     </div>
 </form>
 
