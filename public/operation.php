@@ -83,6 +83,12 @@ if(count($jobs) != 1)
 
 $job = $jobs[0]["name"];
 
+if($job == "Contrôleur")
+{
+    header("Location: /verify.php?id=" . $operations[1]["id"]);
+    die();
+}
+
 if(user::get_job() != "Chef d'équipe" && $_SESSION["auth"]["id"] == $operation["id_operator"])
 {
     add_error("Vous n'avez pas accès à cette page");
@@ -146,7 +152,7 @@ if(isset($inputs->operator) && isset($inputs->description) && isset($inputs->wor
         for($i = 0; $i < count($inputs->types); $i++)
         {
             $query = $pdo->prepare("INSERT INTO gem_adding (id_gem, id_operation, mass, price) VALUES (:id_gem, :id_operation, :mass, :price);");
-            $query->bindParam(":id_gem", $inputs->$inputs->types[$i]);
+            $query->bindParam(":id_gem", $inputs->types[$i]);
             $query->bindParam(":id_operation", $operation["id"]);
             $query->bindParam(":mass", $inputs->weights[$i]);
             $query->bindParam(":price", $inputs->prices[$i]);
@@ -156,12 +162,6 @@ if(isset($inputs->operator) && isset($inputs->description) && isset($inputs->wor
 
     add_success("L'opération a été complétée avec succès");
     header("Location: /mission.php?id=" . $mission_id);
-    die();
-}
-
-if(array_search("Contrôleur", $jobs))
-{
-    header("Location: /verify.php?id=" . $operations[1]["id"]);
     die();
 }
 
@@ -275,27 +275,29 @@ include "../include/header.php";
         <button type="button" onclick="add_metal()">Ajouter un métal</button>
     <?php elseif($job == 'Tailleur'): ?>
         <template id="add-gem">
-            <p><slot name="title"></slot></p>
-            <div>
-                <label>
-                    Type de la pierre
-                    <select name="types[]" required>';
-                        <?php foreach($gems as $gem): ?>
-                            <option value="<?= $gem["id"] ?>"><?= htmlspecialchars($gem["type"]) ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </label>
-            </div>
-            <div>
-                <label>Poids de la pierre
-                    <input type="number" name="weights[]" required>
-                </label>
-            </div>
-            <div>
-                <label>Prix de la pierre
-                    <input type="number" step="0.01" name="prices[]" required>
-                </label>
-            </div>
+            <form>
+                <p><slot name="title"></slot></p>
+                <div>
+                    <label>
+                        Type de la pierre
+                        <select name="types[]" required>';
+                            <?php foreach($gems as $gem): ?>
+                                <option value="<?= $gem["id"] ?>"><?= htmlspecialchars($gem["type"]) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </label>
+                </div>
+                <div>
+                    <label>Poids de la pierre
+                        <input type="number" name="weights[]" required>
+                    </label>
+                </div>
+                <div>
+                    <label>Prix de la pierre
+                        <input type="number" step="0.01" name="prices[]" required>
+                    </label>
+                </div>
+            </form>
         </template>
 
         <div id="add-gems"></div>
@@ -309,14 +311,14 @@ include "../include/header.php";
                     super();
                     let template = document.getElementById('add-gem');
                     let templateContent = template.content;
-                    const shadowRoot = this.attachShadow({mode: 'open'})
-                        .appendChild(templateContent.cloneNode(true));
-                    let internalsElements = [];
+                    let shadowRoot = this.attachShadow({mode: 'open'});
+                    shadowRoot.appendChild(templateContent.cloneNode(true));
+                    let internals = this.attachInternals();
 
-                    for (let input in shadowRoot.querySelector('input')) {
-                        input.addEventListener('input', (event) => {
-                            internalsElements.push(this.attachInternals());
-                            internalsElements[internalsElements.length-1].setFormValue(event.textContent);
+                    for (let input of shadowRoot.querySelectorAll('input, select')) {
+                        input.addEventListener('input', () => {
+                            let formData = new FormData(this.shadowRoot.querySelector('form'));
+                            internals.setFormValue(formData);
                         });
                     }
                 }

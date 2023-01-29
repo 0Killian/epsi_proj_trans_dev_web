@@ -34,7 +34,8 @@ CREATE TABLE `operation` (
 
 CREATE TABLE `metal` (
     `id` int NOT NULL AUTO_INCREMENT,
-    `type` varchar(20),
+    `type` varchar(20) NOT NULL,
+    `price` FLOAT NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

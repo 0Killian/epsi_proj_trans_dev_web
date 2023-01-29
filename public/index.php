@@ -31,7 +31,7 @@ foreach($bijoux_en_vente as $bijoux)
             <div class='card-body d-flex justify-content-between align-items-center'>
                 {$bijoux['price']}€
                 <div class='d-grid gap-2 d-md-flex justify-content-md-end'>
-                    <a href='/buy?id={$bijoux['id']}'><button class='btn btn-primary' type='button'>Acheter</button></a>
+                    <a href='#'><button class='btn btn-primary' type='button'>Acheter</button></a>
                 </div>
             </div>
         </div>";

@@ -19,6 +19,30 @@ if(user::get_job() != "Chef d'équipe")
     die();
 }
 
+$pdo = config::GetPDO();
+$query = $pdo->prepare("SELECT * FROM client;");
+$query->execute();
+$clients = $query->fetchAll();
+
+if(count($clients) == 0)
+{
+    header("Location: /add_client.php");
+    die();
+}
+
+$query = $pdo->prepare("
+        SELECT user.id AS user_id, user.name AS user_name, user.forename AS user_forename, job.name AS job_name FROM user
+        INNER JOIN job on user.id_job = job.id
+        WHERE job.name != 'Chef d\'équipe';");
+$query->execute();
+$operators = $query->fetchAll();
+
+if(count($operators) == 0)
+{
+    header("Location: /register.php");
+    die();
+}
+
 if(isset($inputs->type) && isset($inputs->operator) && isset($inputs->csrf_token) && $inputs->csrf_token == $_SESSION["token"])
 {
     if(isset($inputs->estimated_time) && isset($inputs->estimated_price) && isset($inputs->client))
@@ -86,18 +110,6 @@ if(isset($inputs->type) && isset($inputs->operator) && isset($inputs->csrf_token
 }
 
 $_SESSION["token"] = uniqid();
-
-$pdo = config::GetPDO();
-$query = $pdo->prepare("SELECT * FROM client;");
-$query->execute();
-$clients = $query->fetchAll();
-
-$query = $pdo->prepare("
-        SELECT user.id AS user_id, user.name AS user_name, user.forename AS user_forename, job.name AS job_name FROM user
-        INNER JOIN job on user.id_job = job.id
-        WHERE job.name != 'Chef d\'équipe';");
-$query->execute();
-$operators = $query->fetchAll();
 
 include("../include/header.php");
 ?>
@@ -178,20 +190,23 @@ include("../include/header.php");
             let show_client_information = document.getElementById("show_client_information");
             let information_client = document.getElementById("information_client");
             let toggle_type = document.getElementById("toggle_type");
-            show_client_information.addEventListener("click", () => {
+
+            function on_click()
+            {
                 if(getComputedStyle(information_client).display !== "none"){
                     information_client.style.display = "none";
                     show_client_information.style.backgroundColor = "#D9D9D9";
-                    toggle_type.style.visibility = "visible";
                 } else {
                     information_client.style.display = "block";
                     information_client.style.width = "1040px";
                     information_client.style.height = "350px";
                     show_client_information.style.backgroundColor ="green";
-                    toggle_type.style.visibility = "hidden";
-
                 }
-            })
+            }
+
+            show_client_information.addEventListener("click", on_click);
+
+            on_click();
         </script>
     </div>
 
