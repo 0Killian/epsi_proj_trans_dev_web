@@ -135,7 +135,7 @@ include("../include/header.php");
                     <?php endforeach; ?>
                 </select>
 
-                <a href="add_client.php">Ajouter un client</a>
+                <a id="add_client" href="add_client.php">Ajouter un client</a>
             </div>
 
             <div class="content">
@@ -179,7 +179,7 @@ include("../include/header.php");
                     </div>
 
                     <div>
-                        <input type="submit" value="Créer une mission">
+                        <input id="create_mission" type="submit" value="Créer une mission">
                     </div>
 
                 </div>
@@ -210,62 +210,62 @@ include("../include/header.php");
         </script>
     </div>
 
-<script>
-    document.getElementById("jewel_image").onchange = () => {
-        const [file] = document.getElementById("jewel_image").files;
-        if(file)
-        {
-            document.getElementById("jewel_image_preview").src = URL.createObjectURL(file);
-        }
-    };
+    <script>
+        document.getElementById("jewel_image").onchange = () => {
+            const [file] = document.getElementById("jewel_image").files;
+            if(file)
+            {
+                document.getElementById("jewel_image_preview").src = URL.createObjectURL(file);
+            }
+        };
 
-    document.getElementById("toggle_type").onclick = () => {
-        const type = document.getElementById("type").value;
-        if(type === "creation")
-        {
-            document.getElementById("type").value = "transformation";
-            document.getElementById("toggle_type").innerText = "Transformation";
-            document.getElementById("creation").style.display = "none";
-            document.getElementById("transformation").style.display = "block";
+        document.getElementById("toggle_type").onclick = () => {
+            const type = document.getElementById("type").value;
+            if(type === "creation")
+            {
+                document.getElementById("type").value = "transformation";
+                document.getElementById("toggle_type").innerText = "Transformation";
+                document.getElementById("creation").style.display = "none";
+                document.getElementById("transformation").style.display = "block";
 
-            document.getElementById("creation").childNodes.forEach((child) => {
-                if(child.tagName === "INPUT")
-                {
-                    child.required = false;
-                }
-            });
+                document.getElementById("creation").childNodes.forEach((child) => {
+                    if(child.tagName === "INPUT")
+                    {
+                        child.required = false;
+                    }
+                });
 
-            document.getElementById("creation").childNodes.forEach((child) => {
-                if(child.tagName === "INPUT")
-                {
-                    child.required = true;
-                }
-            });
-        }
-        else
-        {
-            document.getElementById("type").value = "creation";
-            document.getElementById("toggle_type").innerText = "Création";
-            document.getElementById("creation").style.display = "block";
-            document.getElementById("transformation").style.display = "none";
+                document.getElementById("creation").childNodes.forEach((child) => {
+                    if(child.tagName === "INPUT")
+                    {
+                        child.required = true;
+                    }
+                });
+            }
+            else
+            {
+                document.getElementById("type").value = "creation";
+                document.getElementById("toggle_type").innerText = "Création";
+                document.getElementById("creation").style.display = "block";
+                document.getElementById("transformation").style.display = "none";
 
-            document.getElementById("creation").childNodes.forEach((child) => {
-                if(child.tagName === "INPUT")
-                {
-                    child.required = true;
-                }
-            });
+                document.getElementById("creation").childNodes.forEach((child) => {
+                    if(child.tagName === "INPUT")
+                    {
+                        child.required = true;
+                    }
+                });
 
-            document.getElementById("creation").childNodes.forEach((child) => {
-                if(child.tagName === "INPUT")
-                {
-                    child.required = false;
+                document.getElementById("creation").childNodes.forEach((child) => {
+                    if(child.tagName === "INPUT")
+                    {
+                        child.required = false;
 
-                }
-            });
-        }
-    };
-</script>
+                    }
+                });
+            }
+        };
+    </script>
 
 <?php
 include("../include/footer.php");

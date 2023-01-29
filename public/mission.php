@@ -53,8 +53,6 @@ if($total_work_time > $mission["estimated_work_time"])
     echo "Le temps de travail est dépassé";
 }
 
-$last_job = null;
-
 foreach($operations as $operation)
 {
     var_dump($operation);
@@ -72,11 +70,6 @@ foreach($operations as $operation)
     }
 
     $job = $jobs[0]["name"];
-
-    if($last_job == null)
-    {
-        $last_job = $job;
-    }
 
     if($job == "Fondeur")
     {
@@ -97,18 +90,15 @@ foreach($operations as $operation)
 
 }
 
-if($mission["in_progress"])
-{
-    if($mission["validated"]): ?>
-        <a href="send_to_client.php?id=<?= $mission["id"]; ?>">Envoyer au client</a>
-    <?php else: ?>
-        <?php if($last_job != "Contrôleur"): ?>
-            <a href="operation.php?mission_id=<?= $mission["id"]; ?>">Opération en cours</a>
-        <?php endif; ?>
+?>
 
-        <?php if(count($operations) > 1): ?>
-            <a href="verify.php?id=<?= $operations[1]["id"] ?>">Contrôler</a>;
-        <?php endif; ?>
-    <?php endif;
+<a href="operation.php?mission_id=<?php echo $mission["id"]; ?>">Opération en cours</a>
+
+<?php
+
+if(count($operations) > 1)
+{
+    echo "<a href='verify.php?id=" . $operations[1]["id"] . "'>Contrôler</a>";
 }
+
 include "../include/footer.php";

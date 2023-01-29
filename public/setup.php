@@ -41,9 +41,8 @@ if(isset($inputs->name) && isset($inputs->forename) && isset($inputs->email) && 
     $query->execute();
 
     $query = $pdo->prepare("INSERT INTO metal (type, price) VALUES (:type, :price);");
-
     $type = "Or";
-    $price = 57.04;
+    $price = 0.00547;
     $query->bindParam(":type", $type);
     $query->bindParam(":price", $price);
     $query->execute();
@@ -70,6 +69,36 @@ if(isset($inputs->name) && isset($inputs->forename) && isset($inputs->email) && 
     $price = 0.002;
     $query->bindParam(":type", $type);
     $query->bindParam(":price", $price);
+    $query->execute();
+
+    $query = $pdo->prepare("INSERT INTO gem (type) VALUES (:type);");
+
+    $type = "Quartz";
+    $query->bindParam(":type", $type);
+    $query->execute();
+
+    $type = "Diamant";
+    $query->bindParam(":type", $type);
+    $query->execute();
+
+    $type = "Émeraude";
+    $query->bindParam(":type", $type);
+    $query->execute();
+
+    $type = "Rubis";
+    $query->bindParam(":type", $type);
+    $query->execute();
+
+    $type = "Saphir";
+    $query->bindParam(":type", $type);
+    $query->execute();
+
+    $type = "Jade";
+    $query->bindParam(":type", $type);
+    $query->execute();
+
+    $type = "Onyx";
+    $query->bindParam(":type", $type);
     $query->execute();
 
     user::register($inputs->name, $inputs->forename, $inputs->email, $inputs->password, "Chef d'équipe");

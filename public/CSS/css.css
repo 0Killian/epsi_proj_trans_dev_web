@@ -132,6 +132,7 @@ button  {
     margin: auto;
     width: 1040px;
     height: 350px;
+    border-radius: 20px;
 }
 
 .client-creation {
@@ -151,6 +152,30 @@ button  {
     left: 100px;
     top: 219px;
     z-index: 2;
+    padding: 20px;
+}
+
+div#information_client {
+    border-radius: 20px;
+}
+
+div#information_client h2 {
+    padding: 20px;
+}
+
+#information_client label {
+    padding-left: 23px;
+    margin-top: 7%;
+}
+
+#add_client {
+    background-color: #FFD700;
+    border-radius: 20px;
+    padding: 10px;
+    text-decoration: none;
+    margin-left: 29%;
+    position: absolute;
+    margin-top: 6%;
 }
 
 #toggle_type {
@@ -183,4 +208,63 @@ button  {
 .add_client {
     margin-left: 370px;
     margin-top: 100px;
+}
+
+#create_mission {
+    margin-left: 63%;
+    margin-top: 10px;
+}
+
+form#operation_form {
+    background-color: #84837D;
+    text-align: start;
+    padding: 20px;
+    padding-top: 300px;
+    border-radius: 20px;
+    width: 40%;
+}
+
+#description {
+    height: 30px;
+    border: none;
+    border-radius: 10px;
+    margin-top: 10px;
+    width: 100%;
+}
+
+form#operation_form div {
+    margin-bottom: 10px;
+}
+
+form#operation_form div label {
+    display: table-cell;
+}
+
+#operation_button {
+    border-radius: 10px;
+    padding: 5px;
+    margin-left: 60%;
+}
+
+input#work_time {
+    border-radius: 10px;
+    width: 100%;
+    border: none;
+    margin-top: 5px;
+}
+
+#metal_adding {
+    border-radius: 10px;
+    padding: 5px;
+    background-color: white;
+    border: 3px solid black;
+    margin-left: 60%;
+}
+
+#gem_adding {
+    border-radius: 10px;
+    padding: 5px;
+    background-color: white;
+    border: 3px solid black;
+    margin-left: 60%;
 }

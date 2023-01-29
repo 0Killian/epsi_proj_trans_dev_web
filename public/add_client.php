@@ -35,7 +35,7 @@ include("../include/header.php");
     <div class="add_client">
         <form action="/add_client.php" method="post">
             <div class="form-group">
-                <label for="name">Nom</label>
+                <label for="name">Nom Complet</label>
                 <input class="form-control" type="text" name="name" id="name" required/>
             </div>
 
