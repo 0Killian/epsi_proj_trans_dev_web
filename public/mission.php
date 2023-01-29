@@ -46,7 +46,7 @@ var_dump($mission);
 
 var_dump($total_work_time);
 
-if($total_work_time > $mission["work_time"])
+if($total_work_time > $mission["estimated_work_time"])
 {
     echo "Le temps de travail est dépassé";
 }
@@ -55,7 +55,7 @@ foreach($operations as $operation)
 {
     var_dump($operation);
 
-    $query = $pdo->prepare("SELECT * FROM job INNER JOIN user ON user.id_job = job.id WHERE user.id = :id");
+    $query = $pdo->prepare("SELECT job.* FROM job INNER JOIN user ON user.id_job = job.id WHERE user.id = :id");
     $query->bindParam(":id", $operation["id_operator"]);
     $query->execute();
     $jobs = $query->fetchAll();
@@ -67,7 +67,7 @@ foreach($operations as $operation)
         die();
     }
 
-    $job = $jobs[0];
+    $job = $jobs[0]["name"];
 
     if($job == "Fondeur")
     {
@@ -94,6 +94,9 @@ foreach($operations as $operation)
 
 <?php
 
-echo "<a href='verify.php?id=" . $operations[1]["id"] . "'>Contrôler</a>";
+if(count($operations) > 1)
+{
+    echo "<a href='verify.php?id=" . $operations[1]["id"] . "'>Contrôler</a>";
+}
 
 include "../include/footer.php";

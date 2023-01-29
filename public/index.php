@@ -1,15 +1,16 @@
 <?php
 
-include "../include/header.php";
-include "../include/config.php";
-
 session_start();
+
+include "../include/authentication.php";
 
 $pdo = config::GetPDO();
 
 $requete = $pdo->prepare("SELECT * FROM jewel");
 $requete->execute();
 $bijoux_en_vente = $requete->fetchAll();
+
+include "../include/header.php";
 
 ?>
 

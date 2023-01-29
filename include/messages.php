@@ -33,6 +33,15 @@ function format_errors_clear(): string
         $str .= "<div class=\"alert alert-danger\"/>$error</div>\n";
     }
 
+    $str .= "
+        <script>
+            setTimeout(function () {
+                for (let element of document.getElementsByClassName(\"alert-danger\") ) {
+                    element.style.display = \"none\";
+                }
+            }, 5000);
+        </script>";
+
     unset($_SESSION["error"]);
 
     return $str;
@@ -50,6 +59,15 @@ function format_success_clear(): string
     {
         $str .= "<div class=\"alert alert-success\"/>$success</div>\n";
     }
+
+    $str .= "
+        <script>
+            setTimeout(function () {
+                for (let element of document.getElementsByClassName(\"alert-success\") ) {
+                    element.style.display = \"none\";
+                }
+            }, 5000);
+        </script>";
 
     unset($_SESSION["success"]);
 

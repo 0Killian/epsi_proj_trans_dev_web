@@ -68,6 +68,12 @@ if(isset($inputs->type) && isset($inputs->operator) && isset($inputs->csrf_token
                 $query->bindParam(":image", $uploaded_path);
                 $query->bindParam(":id_client", $inputs->client);
                 $query->execute();
+                $id_request = $pdo->lastInsertId();
+
+                $query = $pdo->prepare("INSERT INTO operation (id_operator, id_request) VALUES (:id_operator, :id_request);");
+                $query->bindParam(":id_operator", $inputs->operator);
+                $query->bindParam(":id_request", $id_request);
+                $query->execute();
 
                 add_success("Une nouvelle fiche mission a été créée");
                 header('Location: /missions.php');
