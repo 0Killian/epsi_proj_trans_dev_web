@@ -4,6 +4,12 @@ session_start();
 include("../include/authentication.php");
 include("../include/forms.php");
 
+if(config::IsConfigured())
+{
+    header("Location: /index.php");
+    die();
+}
+
 $inputs = get_inputs(["name", "forename", "email", "password"], INPUT_POST);
 if(isset($inputs->name) && isset($inputs->forename) && isset($inputs->email) && isset($inputs->password))
 {
@@ -61,6 +67,8 @@ if(isset($inputs->name) && isset($inputs->forename) && isset($inputs->email) && 
     $query->execute();
 
     user::register($inputs->name, $inputs->forename, $inputs->email, $inputs->password, "Chef d'équipe");
+
+    config::SetConfigured();
 
     add_success("L'application a été configuré avec succès.");
     header("Location: /login.php");

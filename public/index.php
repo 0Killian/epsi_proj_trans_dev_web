@@ -4,6 +4,8 @@ session_start();
 
 include "../include/authentication.php";
 
+config::RedirectIfNotConfigured();
+
 $pdo = config::GetPDO();
 
 $requete = $pdo->prepare("SELECT * FROM jewel");

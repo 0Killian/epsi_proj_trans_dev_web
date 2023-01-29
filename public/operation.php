@@ -6,6 +6,8 @@ include "../include/authentication.php";
 include "../include/upload.php";
 include "../include/forms.php";
 
+config::RedirectIfNotConfigured();
+
 user::redirect_unauthenticated();
 
 $mission_id = filter_input(INPUT_GET, "mission_id");

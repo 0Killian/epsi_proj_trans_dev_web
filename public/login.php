@@ -1,8 +1,11 @@
 <?php
 
 session_start();
+
 include("../include/authentication.php");
 include("../include/forms.php");
+
+config::RedirectIfNotConfigured();
 
 if(user::is_authenticated())
 {

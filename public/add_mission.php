@@ -5,6 +5,8 @@ include("../include/authentication.php");
 include("../include/forms.php");
 include("../include/upload.php");
 
+config::RedirectIfNotConfigured();
+
 user::redirect_unauthenticated();
 
 $inputs = get_inputs(["csrf_token", "type", "client", "jewel_estimation", "estimated_time", "estimated_price", "operator"], INPUT_POST);

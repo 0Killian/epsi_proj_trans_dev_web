@@ -22,4 +22,23 @@ class config
 
         return $pdo;
     }
+
+    public static function IsConfigured(): bool
+    {
+        return file_exists("../storage/configured");
+    }
+
+    public static function RedirectIfNotConfigured()
+    {
+        if(!self::IsConfigured())
+        {
+            header("Location: /setup.php");
+            die();
+        }
+    }
+
+    public static function SetConfigured()
+    {
+        file_put_contents("../storage/configured", "");
+    }
 };

@@ -3,6 +3,8 @@ session_start();
 
 include("../include/authentication.php");
 
+config::RedirectIfNotConfigured();
+
 if(!user::is_authenticated())
 {
     header("Location: /index.php");

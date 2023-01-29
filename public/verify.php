@@ -5,6 +5,8 @@ session_start();
 include "../include/authentication.php";
 include "../include/forms.php";
 
+config::RedirectIfNotConfigured();
+
 if(user::get_job() != "Chef d'équipe" && user::get_job() != "Contrôleur")
 {
     add_error("Vous n'avez pas accés à cette page");

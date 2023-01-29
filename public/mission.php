@@ -4,6 +4,8 @@ session_start();
 
 include "../include/authentication.php";
 
+config::RedirectIfNotConfigured();
+
 user::redirect_unauthenticated();
 
 if(user::get_job() != "Chef d'équipe" && user::get_job() != "Contrôleur")
