@@ -37,71 +37,137 @@ foreach($operations as $operation)
 }
 include "../include/header.php";
 
-var_dump($mission);
-
-var_dump($total_work_time);
-
 if($total_work_time > $mission["estimated_work_time"])
 {
     echo "Le temps de travail est dépassé";
 }
 
-$last_job = null;
+$query = $pdo->prepare("SELECT job.* FROM job INNER JOIN user ON user.id_job = job.id WHERE user.id = :id");
+$query->bindParam(":id", $operations[0]["id_operator"]);
+$query->execute();
+$jobs = $query->fetchAll();
 
-foreach($operations as $operation)
+if(count($jobs) != 1)
 {
-    var_dump($operation);
-
-    $query = $pdo->prepare("SELECT job.* FROM job INNER JOIN user ON user.id_job = job.id WHERE user.id = :id");
-    $query->bindParam(":id", $operation["id_operator"]);
-    $query->execute();
-    $jobs = $query->fetchAll();
-
-    if(count($jobs) != 1)
-    {
-        add_error("Une erreur est survenue durant le chargement de la page");
-        header("Location: /index.php");
-        die();
-    }
-
-    $job = $jobs[0]["name"];
-
-    if($last_job == null)
-    {
-        $last_job = $job;
-    }
-
-    if($job == "Fondeur")
-    {
-        $query = $pdo->prepare("SELECT * FROM metal_adding WHERE id_operation = :id");
-        $query->bindParam(":id", $operation["id"]);
-        $query->execute();
-        $metal_addings = $query->fetchAll();
-        var_dump($metal_addings);
-    }
-    elseif($job == "Tailleur")
-    {
-        $query = $pdo->prepare("SELECT * FROM gem_adding WHERE id_operation = :id");
-        $query->bindParam(":id", $operation["id"]);
-        $query->execute();
-        $gem_addings = $query->fetchAll();
-        var_dump($gem_addings);
-    }
-
+    add_error("Une erreur est survenue durant le chargement de la page");
+    header("Location: /index.php");
+    die();
 }
 
-if($mission["in_progress"])
-{
-    if($mission["validated"] && user::get_job() == "Chef d'équipe"): ?>
-        <a href="send_to_client.php?id=<?= $mission["id"]; ?>">Envoyer au client</a>
-    <?php else: ?>
-        <?php if($last_job != "Contrôleur" && (user::get_job() == "Chef d'équipe" || $_SESSION["auth"]["id"] == $operations[0]["id_operator"])): ?>
-            <a href="operation.php?mission_id=<?= $mission["id"]; ?>">Opération en cours</a>
-        <?php endif; ?>
+$last_operation_control = $jobs[0]["name"] == "Contrôleur";
 
-        <?php if(count($operations) > 1 && (user::get_job() == "Chef d'équipe" || user::get_job() == "Contrôleur")): ?>
-            <a href="verify.php?id=<?= $operations[1]["id"] ?>">Contrôler</a>;
-        <?php endif; ?>
-    <?php endif;
+$query = $pdo->prepare("SELECT * FROM client WHERE id = :id");
+$query->bindParam(":id", $mission["id_client"]);
+$query->execute();
+$clients = $query->fetchAll();
+
+if(count($clients) != 1)
+{
+    add_error("Une erreur est survenue durant le chargement de la page");
+    header("Location: /index.php");
+    die();
 }
+
+$client = $clients[0];
+
+
+
+?>
+
+    <div class="container-mission">
+        <div id="mission-affichage">
+            <img src="<?= $mission["image"] ?>" id="image_preview" alt="" style="max-width: 300px; padding-bottom: 20px">
+
+            <table class="table text-white">
+                <tr>
+                    <th>Client</th>
+                    <td><?= htmlspecialchars($client["name"]) ?> (<?= htmlspecialchars($client["email"]) ?>)</td>
+                </tr>
+                <tr>
+                    <th>Temps de travail total (estimé):</th>
+                    <td <?= $total_work_time > $mission["estimated_work_time"] ? "class=\"text-darkred\"" : ""?>><?= htmlspecialchars($total_work_time); ?> heures (<?= htmlspecialchars($mission['estimated_work_time']); ?> heures)</td>
+                </tr>
+                <tr>
+                    <th>Prix Estimé : </th>
+                    <td><?= htmlspecialchars($mission['estimated_price']); ?> € </td>
+                </tr>
+            </table>
+
+            <div style="padding-top: 20px;">
+                <?php if($mission["in_progress"]): ?>
+                    <?php if(!$mission["validated"] && !$last_operation_control && (user::get_job() == "Chef d'équipe" || $_SESSION["auth"]["id"] == $operations[0]["id_operator"])): ?>
+                        <a href="operation.php?mission_id=<?php echo $mission["id"]; ?>"><button class="btn btn-primary">Opération en cours</button></a>
+                    <?php endif; ?>
+
+                    <?php if(!$mission["validated"] && count($operations) > 1 && (user::get_job() == "Chef d'équipe" || user::get_job() == "Contrôleur")): ?>
+                        <a href='verify.php?id=<?= $operations[1]["id"] ?>'><button class="btn btn-primary">Contrôler</button></a>
+                    <?php endif; ?>
+
+                    <?php if(user::get_job() == "Chef d'équipe" && $mission["validated"]): ?>
+                        <a href="send_to_client.php?id=<?= $mission["id"] ?>"><button class="btn btn-primary">Envoyer au client</button></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; justify-content: space-between; width: 40%;">
+        <?php foreach($operations as $operation): ?>
+            <div class="mission-affichage-operation">
+                <div class="operation-image">
+                    <img src="<?= $operation["image"] ?>" alt="">
+                </div>
+
+                <table class="table operation-information">
+                    <tr>
+                        <th>Temps de travail</th>
+                        <td><?= htmlspecialchars($operation['work_time'] != null ? $operation['work_time'] . ' heures' : "N/A"); ?></td>
+                    </tr>
+
+                    <tr>
+                        <th>Commentaire</th>
+                        <td><?= htmlspecialchars($operation['description']); ?></td>
+                    </tr>
+
+                    <?php
+                    $query = $pdo->prepare("SELECT * FROM user WHERE id = :id");
+                    $query->bindParam(":id", $operation["id_operator"]);
+                    $query->execute();
+                    $users = $query->fetchAll();
+
+                    if(count($users) != 1)
+                    {
+                        add_error("Une erreur est survenue durant le chargement de la page");
+                        header("Location: /index.php");
+                        die();
+                    }
+
+                    $user = $users[0];
+
+                    $query = $pdo->prepare("SELECT job.* FROM job INNER JOIN user ON user.id_job = job.id WHERE user.id = :id");
+                    $query->bindParam(":id", $operation["id_operator"]);
+                    $query->execute();
+                    $jobs = $query->fetchAll();
+
+                    if(count($jobs) != 1)
+                    {
+                        add_error("Une erreur est survenue durant le chargement de la page");
+                        header("Location: /index.php");
+                        die();
+                    }
+
+                    $user_job = $jobs[0]["name"];
+                    ?>
+
+                    <tr>
+                        <th>Opérateur</th>
+                        <td><?= htmlspecialchars($user["forename"] . " " . $user['name'] . " (" . $user_job . ")"); ?></td>
+                    </tr>
+                </table>
+            </div>
+        <?php endforeach; ?>
+        </div>
+    </div>
+
+<?php
+
 include "../include/footer.php";

@@ -24,16 +24,20 @@
                         Accueil
                     </a>
                 </li>
+                <?php if(user::is_authenticated() && user::get_job() == "Chef d'équipe"): ?>
                 <li class="others">
                     <a href="/add_mission.php" class="nav-link text-black">
                         Nouvelle mission
                     </a>
                 </li>
+                <?php endif; ?>
+                <?php if(user::is_authenticated()): ?>
                 <li class="others">
                     <a href="/missions.php" class="nav-link text-black">
                         Missions en cours
                     </a>
                 </li>
+                <?php endif; ?>
                 <?php if(user::is_authenticated() && user::get_job() == "Chef d'équipe"): ?>
                     <li class="others">
                         <a href="/register.php" class="nav-link text-black">

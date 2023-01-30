@@ -112,7 +112,7 @@ if(isset($inputs->operator) && isset($inputs->description) && isset($inputs->wor
         die();
     }
 
-    if(isset($inputs->image))
+    if(file_exists($_FILES['image']['tmp_name']) && is_uploaded_file($_FILES['image']['tmp_name']))
     {
         $inputs->image = upload_file("image");
     }
@@ -185,56 +185,45 @@ $_SESSION["token"] = uniqid();
 include "../include/header.php";
 ?>
 
-<form id="operation_form" enctype="multipart/form-data" action="/operation.php" method="post">
+<form id="operation-form" enctype="multipart/form-data" action="/operation.php" method="post">
     <input type="hidden" value="<?= $_SESSION["token"] ?>" name="csrf_token" id="csrf_token">
     <input type="hidden" value="<?= $mission_id ?>" name="mission_id" id="mission_id">
 
-    <div>
+    <div class="form-group">
+        <img src="/uploads/default.svg" id="image_preview" alt="" style="width: 270px; margin: auto; display: block">
+        <input class="form-control" style="width: 310px; margin: auto" accept="image/jpeg, image/png" type="file" name="image" id="image">
+    </div>
+
+    <div class="form-group">
         <label for="description">Description</label>
-        <textarea name="description" id="description" cols="30" rows="10" required><?= htmlspecialchars($operation["description"]); ?></textarea>
+        <textarea style="height: 150px;" class="form-control" name="description" id="description" cols="30" rows="10" required><?= htmlspecialchars($operation["description"]); ?></textarea>
     </div>
 
-    <div>
-        <label id="operation_work_time" for="work_time">Temps de travail</label>
-        <input type="number" name="work_time" id="work_time" value="<?= htmlspecialchars($operation["work_time"]); ?>" required>
+    <div class="form-group">
+        <label id="operation_work_time" for="work_time">Temps de travail (en heures)</label>
+        <input class="form-control" type="number" name="work_time" id="work_time" value="<?= htmlspecialchars($operation["work_time"]); ?>" required>
     </div>
 
-    <div>
-        <div>
-            <label id="image_du_bijou" for="image" style="visibility: hidden">Image du bijou</label>
-            <img src="" id="image_preview" alt="" style="width: 270px; height: 270px; position: absolute; left: 115px; top: 233px;">
-        </div>
-        <input accept="image/jpeg, image/png" type="file" name="image" id="image">
-    </div>
-
-    <?php
-
-    if($job == "Fondeur"):
-        ?>
-
+    <?php if($job == "Fondeur"): ?>
         <template id="add-metal">
-            <form>
-                <p><slot name="title"></slot></p>
+            <form style="display: flex; flex-direction: row; justify-content: space-between; margin: 0 50px;">
+                <slot name="title"></slot>
                 <div>
-                    <label>
-                        Type du métal
-                        <select name="types[]" required>';
-                            <?php foreach($metals as $metal): ?>
-                                <option value="<?= $metal["id"] ?>"><?= htmlspecialchars($metal["type"]) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </label>
+                    Type du métal
+                    <select name="types[]" required>';
+                        <?php foreach($metals as $metal): ?>
+                            <option value="<?= $metal["id"] ?>"><?= htmlspecialchars($metal["type"]) ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
                 <div>
-                    <label>
-                        Poids du métal
-                        <input type="number" name="weights[]" required>
-                    </label>
+                    Poids du métal
+                    <input type="number" step="0.01" name="weights[]" required>
                 </div>
             </form>
         </template>
 
-        <div id="add-metals"></div>
+        <div style="width: 85%; margin-bottom: 50px;" id="add-metals"></div>
 
         <script>
         count = 0;
@@ -272,35 +261,31 @@ include "../include/header.php";
 
         </script>
 
-        <button id="metal_adding" type="button" onclick="add_metal()">Ajouter un métal</button>
+        <div style="width: 85%; display: flex; justify-content: center"><button class="btn btn-secondary" type="button" onclick="add_metal()">Ajouter un métal</button></div>
     <?php elseif($job == 'Tailleur'): ?>
         <template id="add-gem">
-            <form>
-                <p><slot name="title"></slot></p>
+            <form style="display: flex; flex-direction: row; justify-content: space-between; margin: 0 50px;">
+                <slot name="title"></slot>
                 <div>
-                    <label>
-                        Type de la pierre
-                        <select name="types[]" required>';
-                            <?php foreach($gems as $gem): ?>
-                                <option value="<?= $gem["id"] ?>"><?= htmlspecialchars($gem["type"]) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </label>
+                    Type de la pierre
+                    <select name="types[]" required>';
+                        <?php foreach($gems as $gem): ?>
+                            <option value="<?= $gem["id"] ?>"><?= htmlspecialchars($gem["type"]) ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
                 <div>
-                    <label>Poids de la pierre
-                        <input type="number" name="weights[]" required>
-                    </label>
+                    Poids de la pierre
+                    <input type="number" step="0.01" name="weights[]" required>
                 </div>
                 <div>
-                    <label>Prix de la pierre
-                        <input type="number" step="0.01" name="prices[]" required>
-                    </label>
+                    Prix de la pierre
+                    <input type="number" step="0.01" name="prices[]" required>
                 </div>
             </form>
         </template>
 
-        <div id="add-gems"></div>
+        <div style="width: 85%; margin-bottom: 50px;" id="add-gems"></div>
 
         <script>
             count = 0;
@@ -338,22 +323,32 @@ include "../include/header.php";
 
         </script>
 
-        <button id="gem_adding" type="button" onclick="add_gem()">Ajouter une pierre</button>
+        <div style="width: 85%; display: flex; justify-content: center"><button class="btn btn-secondary" type="button" onclick="add_gem()">Ajouter une pierre</button></div>
     <?php endif; ?>
 
-    <div>
+    <div style="padding-top: 20px;" class="form-group">
         <p>Si cette opération est la dernière étape de la mission, sélectionnez un contrôleur pour la compléter</p>
         <label for="operator">Prochain opérateur</label>
-        <select name="operator" id="operator" required>
+        <select name="operator" id="operator" class="form-control" required>
             <?php foreach($operators as $operator): ?>
                 <option value="<?= $operator["user_id"] ?>"><?= htmlspecialchars($operator["user_forename"]) ?> <?= htmlspecialchars($operator["user_name"]) ?> | <?= htmlspecialchars($operator["job_name"])?></option>
             <?php endforeach; ?>
         </select>
     </div>
 
-    <div>
-        <input type="submit" id="operation_button" value="Prochain Opérateur">
+    <div class="form-group" style="display: flex; justify-content: center; padding-bottom: 25px">
+        <input class="btn btn-primary" type="submit" value="Valider">
     </div>
+
+    <script>
+        document.getElementById("image").onchange = () => {
+            const [file] = document.getElementById("image").files;
+            if(file)
+            {
+                document.getElementById("image_preview").src = URL.createObjectURL(file);
+            }
+        };
+    </script>
 </form>
 
 <?php

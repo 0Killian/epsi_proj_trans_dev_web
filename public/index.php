@@ -16,28 +16,23 @@ include "../include/header.php";
 
 ?>
 
-<?php
-foreach($bijoux_en_vente as $bijoux)
-{
-    echo "
-        <div class='card' style='width: 18rem;'>
-            <img class='card-img-top' src='{$bijoux['image']}' alt='{$bijoux['name']}'>
-            <div class='card-body'>
-                <h5 class='card-title'>{$bijoux['name']}</h5>
-                <p class='card-text'>
-                    {$bijoux['description']}
-                </p>
+<div id="vitrine">
+<?php foreach($bijoux_en_vente as $bijoux): ?>
+    <div class='vitrine-card'>
+        <img class='card-img-top' src='<?= $bijoux['image'] ?>' alt='<?= $bijoux['name'] ?>'>
+        <div class='card-body'>
+            <h5 class='card-title'><?= $bijoux['name'] ?></h5>
+            <div class='card-text'>
+                <?= $bijoux['description'] ?>
             </div>
-            <div class='card-body d-flex justify-content-between align-items-center'>
-                {$bijoux['price']}€
+            <div class='d-flex justify-content-between align-items-center'>
+                <?= $bijoux['price'] ?>€
                 <div class='d-grid gap-2 d-md-flex justify-content-md-end'>
-                    <a href='#'><button class='btn btn-primary' type='button'>Acheter</button></a>
+                    <a href='#'><button class='btn btn-secondary' style="border: transparent" type='button'>Acheter</button></a>
                 </div>
             </div>
-        </div>";
-
-}
-?>
-
-<?php
-include "../include/footer.php";
+        </div>
+    </div>
+<?php endforeach; ?>
+</div>
+<?php include "../include/footer.php";

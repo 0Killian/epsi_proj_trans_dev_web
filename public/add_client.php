@@ -32,8 +32,9 @@ if(isset($inputs->name) && isset($inputs->email))
 include("../include/header.php");
 
 ?>
-    <div class="add_client">
+    <div class="add-client">
         <form action="/add_client.php" method="post">
+            <b>Ajouter un client</b>
             <div class="form-group">
                 <label for="name">Nom Complet</label>
                 <input class="form-control" type="text" name="name" id="name" required/>
@@ -44,7 +45,9 @@ include("../include/header.php");
                 <input class="form-control" type="email" name="email" id="email" required/>
             </div>
 
-            <button class="button button-primary">Créer un client</button>
+            <div style="display: flex; justify-content: center; padding-top: 15px;">
+                <button class="btn btn-primary">Ajouter un client</button>
+            </div>
         </form>
     </div>
 <?php

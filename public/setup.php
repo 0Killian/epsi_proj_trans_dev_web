@@ -42,7 +42,7 @@ if(isset($inputs->name) && isset($inputs->forename) && isset($inputs->email) && 
 
     $query = $pdo->prepare("INSERT INTO metal (type, price) VALUES (:type, :price);");
     $type = "Or";
-    $price = 0.00547;
+    $price = 54.7;
     $query->bindParam(":type", $type);
     $query->bindParam(":price", $price);
     $query->execute();
@@ -123,6 +123,8 @@ include("../include/header.php");
             </svg>
         </div>
         <form action="/setup.php" method="post" class="form-register">
+            Bienvenue sur le site de gestion de la bijouterie Chimère.
+            Pour commencer, créez un compte administrateur :
             <div class="form-group">
                 <label for="name">Nom :</label>
                 <input class="form-control" type="text" name="name" id="name" required/>
@@ -142,7 +144,10 @@ include("../include/header.php");
                 <label for="password">Mot de passe :</label>
                 <input class="form-control" type="password" name="password" id="password" required/>
             </div>
-            <button class="button button-primary" id="register-button">Configurer</button>
+
+            <div style="display: flex; justify-content: center; padding-top: 15px;">
+                <button class="btn btn-primary">Créer le compte administrateur</button>
+            </div>
         </form>
     </div>
 <?php

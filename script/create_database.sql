@@ -25,7 +25,7 @@ CREATE TABLE `operation` (
     `id` int NOT NULL AUTO_INCREMENT,
     `description` TEXT,
     `work_time` int,
-    `image` varchar(50),
+    `image` varchar(50) NOT NULL DEFAULT '/uploads/default.svg',
     `id_operator` int NOT NULL,
     `id_request` int NOT NULL,
     `date` DATETIME NOT NULL DEFAULT NOW(),

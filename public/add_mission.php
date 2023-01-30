@@ -154,7 +154,7 @@ include("../include/header.php");
 
                         <div class="form-group">
                             <label for="jewel_estimation">Estimation du bijou initial (en €)</label>
-                            <input class="form-control" type="number" step="0.01" name="jewel_estimation" id="jewel_estimation" style="margin-left: 31px; margin-top: 20px; margin-bottom: 20px">
+                            <input class="form-control" type="number" step="0.01" name="jewel_estimation" id="jewel_estimation">
                         </div>
                     </div>
 

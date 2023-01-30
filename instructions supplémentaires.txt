@@ -1,2 +1,0 @@
-- Le client ne peut pas refuser son bijou si il a demandé sa création
-- Un employé ne peut avoir qu'un seul poste

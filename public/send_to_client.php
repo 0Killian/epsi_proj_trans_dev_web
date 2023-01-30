@@ -46,7 +46,7 @@ $request = $requests[0];
 
 if(isset($inputs->total_price) && isset($inputs->csrf_token) && $inputs->csrf_token == $_SESSION["token"])
 {
-    header("Location: /client_decision.php?id=" . $id . "&total_price=" . ($inputs->total_price + ($request["type"] == 1 ? $request["estimated_jexel_price"] : 0)));
+    header("Location: /client_decision.php?id=" . $id . "&total_price=" . ($inputs->total_price + ($request["type"] == 1 ? $request["estimated_jewel_price"] : 0)));
     die();
 }
 
@@ -80,12 +80,7 @@ if(count($total_metal_price) != 1)
     die();
 }
 
-$total_metal_price = $total_metal_price[0]["total_price"];
-
-if($total_metal_price == null)
-{
-    $total_metal_price = 0;
-}
+$total_metal_price = round($total_metal_price[0]["total_price"], 2);
 
 $query = $pdo->prepare("
         SELECT SUM(gem_adding.mass * gem_adding.price) AS total_price FROM gem_adding
@@ -102,12 +97,7 @@ if(count($total_gem_price) != 1)
     die();
 }
 
-$total_gem_price = $total_gem_price[0]["total_price"];
-
-if($total_gem_price == null)
-{
-    $total_gem_price = 0;
-}
+$total_gem_price = round($total_gem_price[0]["total_price"], 2);
 
 $_SESSION["token"] = uniqid();
 
@@ -115,10 +105,7 @@ include "../include/header.php";
 
 ?>
 
-<b>Temps total travaillé : </b> <?= $work_time; ?> heures
-<b>Prix total des matériaux : </b> <?= $total_gem_price + $total_metal_price; ?>
-
-<form method="POST" action="/send_to_client.php">
+<form id="send-to-client-form" method="POST" action="/send_to_client.php">
     <script>
         function calculate_price()
         {
@@ -132,15 +119,20 @@ include "../include/header.php";
     <input type="hidden" name="id" value="<?= $id; ?>">
     <input type="hidden" name="csrf_token" value="<?= $_SESSION["token"];?>">
 
-    <div>
+    <div><b>Temps total travaillé : </b> <?= $work_time; ?> heures</div>
+    <div><b>Prix total des matériaux : </b> <?= $total_gem_price + $total_metal_price; ?></div>
+
+    <div class="form-group">
         <label for="hourly_rate">Taux horaire</label>
-        <input step="0.01" type="number" id="hourly_rate" name="hourly_rate" oninput="calculate_price()" required>
+        <input class="form-control" step="0.01" type="number" id="hourly_rate" name="hourly_rate" oninput="calculate_price()" required>
     </div>
 
-    <div>
+    <div class="form-group">
         <label for="total_price">Prix total</label>
-        <input step="0.01" type="number" id="total_price" name="total_price" required>
+        <input class="form-control" step="0.01" type="number" id="total_price" name="total_price" required>
     </div>
 
-    <input type="submit" value="Confirmer">
+    <div class="form-group" style="display: flex; justify-content: center">
+        <button class="btn btn-primary" type="submit">Confirmer</button>
+    </div>
 </form>

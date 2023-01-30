@@ -104,7 +104,7 @@ if(isset($inputs->description) && isset($inputs->operator) && isset($inputs->csr
     }
 
     add_success("L'opération a été validée");
-    header("Location: /index.php");
+    header("Location: /mission.php?id=" . $operation["id_request"]);
     die();
 }
 
@@ -117,45 +117,126 @@ $operators = $query->fetchAll();
 
 include "../include/header.php";
 
-var_dump($operation);
-var_dump($last_operation);
-var_dump($last_operator_jobs);
-
 ?>
+<div style="width: 85%; margin: auto;">
+    <div class="mission-affichage-operation">
+        <div class="operation-image">
+            <img src="<?= $operation["image"] ?>" alt="">
+        </div>
 
-<form action="verify.php" method="post">
-    <input type="hidden" value="<?= $_SESSION["token"] ?>" name="csrf_token" id="csrf_token">
-    <input type="hidden" value="<?= $id ?>" name="id" id="id">
+        <table class="table operation-information">
+            <tr>
+                <th>Temps de travail</th>
+                <td><?= htmlspecialchars($operation['work_time'] != null ? $operation['work_time'] . ' heures' : "N/A"); ?></td>
+            </tr>
 
-    <div>
-        <label for="description">Description</label>
-        <textarea name="description" id="description" cols="30" rows="10"></textarea>
+            <tr>
+                <th>Commentaire</th>
+                <td><?= htmlspecialchars($operation['description']); ?></td>
+            </tr>
+
+            <?php
+            $query = $pdo->prepare("SELECT * FROM user WHERE id = :id");
+            $query->bindParam(":id", $operation["id_operator"]);
+            $query->execute();
+            $users = $query->fetchAll();
+
+            if(count($users) != 1)
+            {
+                add_error("Une erreur est survenue durant le chargement de la page");
+                header("Location: /index.php");
+                die();
+            }
+
+            $user = $users[0];
+
+            $query = $pdo->prepare("SELECT job.* FROM job INNER JOIN user ON user.id_job = job.id WHERE user.id = :id");
+            $query->bindParam(":id", $operation["id_operator"]);
+            $query->execute();
+            $jobs = $query->fetchAll();
+
+            if(count($jobs) != 1)
+            {
+                add_error("Une erreur est survenue durant le chargement de la page");
+                header("Location: /index.php");
+                die();
+            }
+
+            $user_job = $jobs[0]["name"];
+            ?>
+
+            <tr>
+                <th>Opérateur</th>
+                <td><?= htmlspecialchars($user["forename"] . " " . $user['name'] . " (" . $user_job . ")"); ?></td>
+            </tr>
+
+            <?php
+            if($user_job == "Fondeur"):
+                $query = $pdo->prepare("SELECT metal_adding.mass AS mass, metal.type AS type FROM metal_adding INNER JOIN metal on metal_adding.id_metal = metal.id WHERE metal_adding.id_operation = :id");
+                $query->bindParam(":id", $operation["id"]);
+                $query->execute();
+                $metal_addings = $query->fetchAll();
+
+                foreach($metal_addings as $metal_adding):
+                ?>
+                <tr>
+                    <th>Ajout de métal</th>
+                    <td><?= htmlspecialchars($metal_adding["mass"] . " grammes de " . $metal_adding["type"]); ?></td>
+                </tr>
+            <?php
+                endforeach;
+            elseif($user_job == "Tailleur"):
+                $query = $pdo->prepare("SELECT gem_adding.mass AS mass, gem.type AS type, gem_adding.price AS price FROM gem_adding INNER JOIN gem on gem_adding.id_gem = gem.id WHERE gem_adding.id_operation = :id");
+                $query->bindParam(":id", $operation["id"]);
+                $query->execute();
+                $gem_addings = $query->fetchAll();
+
+                foreach($gem_addings as $gem_adding):
+                    ?>
+                    <tr>
+                        <th>Ajout de pierre</th>
+                        <td><?= htmlspecialchars($gem_adding["mass"] . " grammes de " . $gem_adding["type"] . " valant " . $gem_adding["price"]); ?></td>
+                    </tr>
+                <?php
+                endforeach;
+            endif;
+            ?>
+        </table>
     </div>
 
-    <div>
-        <?php if($is_last_operation_control): ?>
-            <p>
-                Pour confirmer la finition du bijoux, choisissez le chef d'atelier en tant que prochain opérateur.
-                Si le bijoux a besoin d'une retouche, choisissez un autre opérateur.
-            </p>
-        <?php endif; ?>
-        <label for="operator">Prochain opérateur</label>
-        <select name="operator" id="operator" required>
-            <?php foreach($operators as $operator): ?>
-                <option value="<?= $operator["user_id"] ?>" <?= !$is_last_operation_control && $operator["user_id"] == $operation["id_operator"] ? "selected" : "" ?>>
-                    <?= htmlspecialchars($operator["user_forename"]) ?> <?= htmlspecialchars($operator["user_name"]) ?> |
-                    <?= htmlspecialchars($operator["job_name"]) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </div>
+    <form action="verify.php" method="post" style="padding: 0 0 50px;">
+        <input type="hidden" value="<?= $_SESSION["token"] ?>" name="csrf_token" id="csrf_token">
+        <input type="hidden" value="<?= $id ?>" name="id" id="id">
 
-    <div>
-        <input type="submit" value="Valider">
-        <a href="mission.php?id=<?= $operation["id_request"] ?>">Annuler</a>
-    </div>
-</form>
+        <div class="form-group" style="width: 100%;">
+            <label for="description">Description</label>
+            <textarea class="form-control" style="height: 150px" name="description" id="description" cols="30" rows="10"></textarea>
+        </div>
 
+        <div class="form-group" style="width: 100%;">
+            <?php if($is_last_operation_control): ?>
+                <p>
+                    Pour confirmer la finition du bijoux, choisissez le chef d'atelier en tant que prochain opérateur.
+                    Si le bijoux a besoin d'une retouche, choisissez un autre opérateur.
+                </p>
+            <?php endif; ?>
+            <label for="operator">Prochain opérateur</label>
+            <select name="operator" id="operator" required>
+                <?php foreach($operators as $operator): ?>
+                    <option value="<?= $operator["user_id"] ?>" <?= !$is_last_operation_control && $operator["user_id"] == $operation["id_operator"] ? "selected" : "" ?>>
+                        <?= htmlspecialchars($operator["user_forename"]) ?> <?= htmlspecialchars($operator["user_name"]) ?> |
+                        <?= htmlspecialchars($operator["job_name"]) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
+        <div class="form-group" style="width: 100%;">
+            <button class="btn btn-primary" type="submit">Valider</button>
+            <a href="mission.php?id=<?= $operation["id_request"] ?>"><button class="btn btn-secondary">Annuler</button></a>
+        </div>
+    </form>
+</div>
 <?php
 
 include "../include/footer.php";
